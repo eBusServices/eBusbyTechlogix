@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "route": "B to A",
+    "price": 1
+  },
+  {
+    "id": "2",
+    "route": "A to B",
+    "price": 1
+  }
+]

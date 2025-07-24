@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!-- home page -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home Page - TechLogix</title>
+  <link rel="icon" href="images/logo.jpg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Navbar -->
+  <nav class="bg-blue-200 p-4 flex justify-between items-center text-black-600">
+    <div class="flex items-center gap-2">
+      <img src="images/logo.jpg" alt="Logo" class="h-8 w-8 square-full">
+      <span class="text-xl font-bold">e-Bus Services by TechLogix Solutions Ltd.</span>
+    </div>
+    <ul class="flex gap-4">
+      <li><a href="index.html" class="hover:underline">Home Page</a></li>
+      <li><a href="#" class="hover:underline">Branches</a></li>
+      <li><a href="#" class="hover:underline">Turns</a></li>
+      <li><a href="book.html" class="hover:underline">View Trips</a></li>
+      <li><a href="#" class="hover:underline">Find Ticket</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-4 text-blue-800">Welcome to e-Bus Services by TechLogix Solutions Ltd.</h1>
+    <section class="mb-6 bg-white rounded-lg shadow p-6">
+      <h2 class="text-2xl font-semibold mb-2 text-gray-700">Our Services</h2>
+      <ul class="list-none space-y-3 mt-4">
+        <li class="flex items-center text-lg text-gray-600">
+          <span class="inline-block w-6 h-6 mr-2 text-green-500">✔️</span>
+          Daily Trips to and from Abuja
+        </li>
+        <li class="flex items-center text-lg text-gray-600">
+          <span class="inline-block w-6 h-6 mr-2 text-green-500">✔️</span>
+          Car Hire/ Charter Services
+        </li>
+        <li class="flex items-center text-lg text-gray-600">
+          <span class="inline-block w-6 h-6 mr-2 text-green-500">✔️</span>
+          Air Port Pickup and drop off
+        </li>
+        <li class="flex items-center text-lg text-gray-600">
+          <span class="inline-block w-6 h-6 mr-2 text-green-500">✔️</span>
+          Haulage
+        </li>
+      </ul>
+    </section>
+    
+    <section class="mb-6 bg-white rounded-lg shadow p-6">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">Gallery</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
+          <img src="images/pic1.jpg" alt="Pic 1" class="w-full h-48 object-cover" />
+        </div>
+        <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
+          <img src="images/pic2.jpg" alt="Pic 2" class="w-full h-48 object-cover" />
+        </div>
+        <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
+          <img src="images/pic3.jpg" alt="Pic 3" class="w-full h-48 object-cover" />
+        </div>
+        <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
+          <img src="images/pic4.jpg" alt="Pic 4" class="w-full h-70 object-cover" />
+        </div>
+      </div>
+    </section>
+
+    <div id="tripTable" class="space-y-4"></div>
+  </main>
+
+
+  <!-- Footer -->
+  <footer class="bg-gray-200 text-center py-4 mt-10">
+    &copy; 2025 TechLogix
+    <div style="position: fixed; bottom: 80px; right: 20px; padding: 20px;" class="text-sm text-black-600">Contact Us:</div>
+    <div style="position: fixed; bottom: 20px; right: 20px; padding: 10px;">
+      <a href="https://wa.me/2348107338827" target="_blank" title="Contact us on WhatsApp">
+        <img src="images/whatsapp.png" alt="WhatsApp" class="h-10 w-10 rounded-full shadow-lg">
+      </a>
+    </div>
+    <div style="position: fixed; bottom: 20px; right: 80px; padding: 10px;">
+      <a href="https://www.facebook.com/profile.php?id=61575500397143" target="_blank" title="Contact us on Facebook">
+        <img src="images/facebook.png" alt="Facebook" class="h-10 w-10 rounded-full shadow-lg">
+      </a>
+    </div>
+  </footer>
+
+  <!-- Modal Script -->
+  <script>
+    // Show modal on page load
+    window.onload = function () {
+      document.getElementById("welcomeModal").classList.remove("hidden");
+    };
+
+    // Close modal
+    function closeModal() {
+      document.getElementById("welcomeModal").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>
