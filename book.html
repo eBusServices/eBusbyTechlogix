@@ -11,9 +11,9 @@
 <body class="bg-gray-100 text-gray-900">
 
   <!-- Navbar -->
-  <nav class="bg-blue-200 p-4 flex justify-between items-center text-black-600">
+  <nav class="bg-blue-200 p-4 flex justify-between items-center text-black">
     <div class="flex items-center gap-2">
-      <img src="images/logo.jpg" alt="Logo" class="h-8 w-8 square-full">
+      <img src="images/logo.jpg" alt="Logo" class="h-8 w-8">
       <span class="text-xl font-bold">e-Bus Services by TechLogix Solutions Ltd.</span>
     </div>
     <ul class="flex gap-4">
@@ -56,16 +56,16 @@
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">Gallery</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
-          <img src="images/pic1.jpg" alt="Pic 1" class="w-full h-48 object-cover" />
+          <img src="images/pic1.jpg" alt="Pic 1" class="w-full h-48 object-cover" loading="lazy" />
         </div>
         <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
-          <img src="images/pic2.jpg" alt="Pic 2" class="w-full h-48 object-cover" />
+          <img src="images/pic2.jpg" alt="Pic 2" class="w-full h-48 object-cover" loading="lazy" />
         </div>
         <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
-          <img src="images/pic3.jpg" alt="Pic 3" class="w-full h-48 object-cover" />
+          <img src="images/pic3.jpg" alt="Pic 3" class="w-full h-48 object-cover" loading="lazy" />
         </div>
         <div class="overflow-hidden rounded-lg shadow hover:shadow-lg transition-shadow">
-          <img src="images/pic4.jpg" alt="Pic 4" class="w-full h-70 object-cover" />
+          <img src="images/pic4.jpg" alt="Pic 4" class="w-full h-48 object-cover" loading="lazy" />
         </div>
       </div>
     </section>
@@ -77,30 +77,18 @@
   <!-- Footer -->
   <footer class="bg-gray-200 text-center py-4 mt-10">
     &copy; 2025 TechLogix
-    <div style="position: fixed; bottom: 80px; right: 20px; padding: 20px;" class="text-sm text-black-600">Contact Us:</div>
+    <div style="position: fixed; bottom: 80px; right: 20px; padding: 20px;" class="text-sm text-black">Contact Us:</div>
     <div style="position: fixed; bottom: 20px; right: 20px; padding: 10px;">
-      <a href="https://wa.me/2348107338827" target="_blank" title="Contact us on WhatsApp">
+      <a href="https://wa.me/2348107338827" target="_blank" rel="noopener noreferrer" title="Contact us on WhatsApp">
         <img src="images/whatsapp.png" alt="WhatsApp" class="h-10 w-10 rounded-full shadow-lg">
       </a>
     </div>
     <div style="position: fixed; bottom: 20px; right: 80px; padding: 10px;">
-      <a href="https://www.facebook.com/profile.php?id=61575500397143" target="_blank" title="Contact us on Facebook">
+      <a href="https://www.facebook.com/profile.php?id=61575500397143" target="_blank" rel="noopener noreferrer" title="Contact us on Facebook">
         <img src="images/facebook.png" alt="Facebook" class="h-10 w-10 rounded-full shadow-lg">
       </a>
     </div>
   </footer>
-
-  <!-- Modal Script -->
-  <script>
-    // Show modal on page load
-    window.onload = function () {
-      document.getElementById("welcomeModal").classList.remove("hidden");
-    };
-
-    // Close modal
-    function closeModal() {
-      document.getElementById("welcomeModal").classList.add("hidden");
-    }
-  </script>
+  <script src="scripts/main.js" defer></script>
 </body>
 </html>
