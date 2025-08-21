@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - TechLogix</title>
+  <link rel="icon" href="images/logo.jpg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Navbar -->
+  <nav class="bg-blue-200 p-4 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <img src="images/logo.jpg" alt="Logo" class="h-8 w-8 rounded-full">
+      <span class="text-xl font-bold">Admin Dashboard</span>
+    </div>
+    <a href="admin-login.html" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Logout</a>
+  </nav>
+
+  <!-- Main -->
+  <main class="max-w-6xl mx-auto p-6 space-y-8">
+    <!-- Stats -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h3 class="text-lg font-semibold">Passengers Today</h3>
+        <p class="text-3xl font-bold text-blue-600">124</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h3 class="text-lg font-semibold">Trips Scheduled</h3>
+        <p class="text-3xl font-bold text-green-600">18</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h3 class="text-lg font-semibold">Active Drivers</h3>
+        <p class="text-3xl font-bold text-purple-600">12</p>
+      </div>
+    </section>
+
+    <!-- Schedule Trips -->
+    <section class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-4">Schedule a Trip</h2>
+      <form class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <input type="text" placeholder="Route (e.g. Makurdi - Abuja)" class="p-2 border rounded" required>
+        <input type="date" class="p-2 border rounded" required>
+        <input type="time" class="p-2 border rounded" required>
+        <button class="col-span-1 sm:col-span-3 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">Schedule Trip</button>
+      </form>
+    </section>
+
+    <!-- Assign Drivers -->
+    <section class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-4">Assign Driver to Trip</h2>
+      <form class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <select class="p-2 border rounded">
+          <option>Select Trip</option>
+          <option>Makurdi - Abuja </option>
+          <option>Makurdi - Abuja </option>
+          <option>Abuja - Makurdi</option>
+          <option>Abuja - Makurdi</option>
+          <option>Charter-Makurdi to Abuja</option>
+          <option>Charter-Abuja to Makurdi</option>
+        </select>
+        <select class="p-2 border rounded">
+          <option>Select Driver</option>
+          <option>Mr Steven</option>
+          <option>Mr Tile</option>
+        </select>
+        <select class="p-2 border rounded">
+          <option>SelectNumber of Seats in Vehicle</option>
+          <option>7</option>
+          <option>6</option>
+          <option>5</option>
+          <option>4</option>
+          <option>3</option>
+          <option>2</option>
+          <option>1</option>
+        </select>
+        <select class="p-2 border rounded">
+         <input type="date" class="p-2 border rounded" required>
+        </select>
+        <select class="p-2 border rounded">
+          <option>Select Time</option>
+          <option>08:00 AM</option>
+          <option>01:30 PM</option>
+        </select>
+        <button class="bg-green-500 hover:bg-green-600 text-white py-2 rounded">Assign</button>
+      </form>
+    </section>
+
+    <!-- Analysis -->
+    <section class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-4">Daily to Monthly Trip Analysis</h2>
+      <div class="h-64 flex items-center justify-center text-gray-500">[Chart Placeholder]</div>
+    </section>
+  </main>
+
+</body>
+</html>
