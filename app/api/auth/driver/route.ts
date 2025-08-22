@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 import { config } from '../../../lib/config'
+<<<<<<< HEAD
 
 // Mock database for drivers
 let drivers = [
@@ -35,6 +36,29 @@ const JWT_SECRET = config.jwtSecret
 
 export async function POST(request: NextRequest) {
   try {
+=======
+import { findDriverById, getAllDrivers, initializeDatabase } from '../../../lib/database'
+
+const JWT_SECRET = config.jwtSecret
+
+// Initialize database on first API call
+let dbInitialized = false
+async function ensureDbInitialized() {
+  if (!dbInitialized) {
+    try {
+      await initializeDatabase()
+      dbInitialized = true
+    } catch (error) {
+      console.error('Database initialization error:', error)
+    }
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    await ensureDbInitialized()
+    
+>>>>>>> main
     const body = await request.json()
     const { driverId, password } = body
 
@@ -47,7 +71,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Find driver by driverId
+<<<<<<< HEAD
     const driver = drivers.find(d => d.driverId === driverId)
+=======
+    const driver = await findDriverById(driverId)
+>>>>>>> main
     if (!driver) {
       return NextResponse.json(
         { error: 'Invalid driver ID or password' },
@@ -74,7 +102,11 @@ export async function POST(request: NextRequest) {
 
     // Create JWT token
     const token = jwt.sign(
+<<<<<<< HEAD
       { userId: driver.id, driverId: driver.driverId, role: 'driver' },
+=======
+      { userId: driver.id, driverId: driver.driver_id, role: 'driver' },
+>>>>>>> main
       JWT_SECRET,
       { expiresIn: '7d' }
     )
@@ -100,10 +132,18 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+<<<<<<< HEAD
     // Return all active drivers (for admin use)
     const activeDrivers = drivers
       .filter(d => d.status === 'active')
       .map(({ password, ...driver }) => driver)
+=======
+    await ensureDbInitialized()
+    
+    // Return all active drivers (for admin use)
+    const allDrivers = await getAllDrivers()
+    const activeDrivers = allDrivers.map(({ password, ...driver }) => driver)
+>>>>>>> main
 
     return NextResponse.json(activeDrivers)
   } catch (error) {

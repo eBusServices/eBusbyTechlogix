@@ -16,6 +16,10 @@ export default function RegisterPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: '',
+<<<<<<< HEAD
+=======
+    username: '',
+>>>>>>> main
     email: '',
     phone: '',
     password: '',
@@ -144,6 +148,28 @@ export default function RegisterPage() {
             </div>
 
             <div>
+<<<<<<< HEAD
+=======
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                Username <span className="text-gray-400">(optional)</span>
+              </label>
+              <div className="mt-1 relative">
+                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="input-field pl-10"
+                  placeholder="Choose a username (optional)"
+                />
+              </div>
+            </div>
+
+            <div>
+>>>>>>> main
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>

@@ -200,8 +200,12 @@ export default function DriverLoginPage() {
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <h4 className="text-sm font-medium text-blue-800 mb-2">Driver Access</h4>
             <p className="text-xs text-blue-700">
+<<<<<<< HEAD
               Contact dispatch for your driver credentials.<br />
               <strong>Dispatch:</strong> +234 810 733 8830
+=======
+              <em>Contact administrator for driver credentials</em>
+>>>>>>> main
             </p>
           </div>
         </div>

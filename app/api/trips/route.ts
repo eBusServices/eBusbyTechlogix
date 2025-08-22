@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+<<<<<<< HEAD
 
 // Mock database - In production, replace with actual database
 let trips = [
@@ -66,6 +67,27 @@ let trips = [
 
 export async function GET(request: NextRequest) {
   try {
+=======
+import { getAllTrips, createTrip, initializeDatabase } from '../../lib/database'
+
+// Initialize database on first API call
+let dbInitialized = false
+async function ensureDbInitialized() {
+  if (!dbInitialized) {
+    try {
+      await initializeDatabase()
+      dbInitialized = true
+    } catch (error) {
+      console.error('Database initialization error:', error)
+    }
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    await ensureDbInitialized()
+    
+>>>>>>> main
     const { searchParams } = new URL(request.url)
     const from = searchParams.get('from')
     const to = searchParams.get('to')
@@ -73,23 +95,38 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured')
     const driverId = searchParams.get('driverId')
 
+<<<<<<< HEAD
     let filteredTrips = [...trips]
 
     // Filter by route
     if (from) {
       filteredTrips = filteredTrips.filter(trip => 
         trip.from.toLowerCase().includes(from.toLowerCase())
+=======
+    let trips = await getAllTrips()
+
+    // Filter by route
+    if (from) {
+      trips = trips.filter(trip => 
+        trip.from_location.toLowerCase().includes(from.toLowerCase())
+>>>>>>> main
       )
     }
 
     if (to) {
+<<<<<<< HEAD
       filteredTrips = filteredTrips.filter(trip => 
         trip.to.toLowerCase().includes(to.toLowerCase())
+=======
+      trips = trips.filter(trip => 
+        trip.to_location.toLowerCase().includes(to.toLowerCase())
+>>>>>>> main
       )
     }
 
     // Filter by date
     if (date) {
+<<<<<<< HEAD
       filteredTrips = filteredTrips.filter(trip => trip.date === date)
     }
 
@@ -104,6 +141,22 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(filteredTrips)
+=======
+      trips = trips.filter(trip => trip.trip_date === date)
+    }
+
+    // Filter by driver (for driver dashboard)
+    if (driverId) {
+      trips = trips.filter(trip => trip.driver_id === driverId)
+    }
+
+    // Return featured trips (limit to 3)
+    if (featured === 'true') {
+      trips = trips.slice(0, 3)
+    }
+
+    return NextResponse.json(trips)
+>>>>>>> main
   } catch (error) {
     console.error('Error fetching trips:', error)
     return NextResponse.json(
@@ -115,6 +168,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+<<<<<<< HEAD
     const body = await request.json()
     const newTrip = {
       id: String(trips.length + 1),
@@ -125,6 +179,49 @@ export async function POST(request: NextRequest) {
     }
 
     trips.push(newTrip)
+=======
+    await ensureDbInitialized()
+    
+    const body = await request.json()
+    const { 
+      route, 
+      from, 
+      to, 
+      departureTime, 
+      arrivalTime, 
+      price, 
+      totalSeats, 
+      date, 
+      vehicle, 
+      driverId,
+      status = 'scheduled'
+    } = body
+
+    // Validate required fields
+    if (!route || !from || !to || !departureTime || !arrivalTime || !price || !totalSeats || !date || !vehicle) {
+      return NextResponse.json(
+        { error: 'All trip details are required' },
+        { status: 400 }
+      )
+    }
+
+    // Create new trip
+    const newTrip = await createTrip({
+      route: `${from} to ${to}`,
+      from_location: from,
+      to_location: to,
+      departure_time: departureTime,
+      arrival_time: arrivalTime,
+      price: Number(price),
+      total_seats: Number(totalSeats),
+      available_seats: Number(totalSeats), // Initially all seats available
+      trip_date: date,
+      vehicle,
+      driver_id: driverId || null,
+      status
+    })
+
+>>>>>>> main
     return NextResponse.json(newTrip, { status: 201 })
   } catch (error) {
     console.error('Error creating trip:', error)
@@ -137,6 +234,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+<<<<<<< HEAD
     const body = await request.json()
     const { id, ...updates } = body
 
@@ -150,6 +248,26 @@ export async function PATCH(request: NextRequest) {
 
     trips[tripIndex] = { ...trips[tripIndex], ...updates }
     return NextResponse.json(trips[tripIndex])
+=======
+    await ensureDbInitialized()
+    
+    const body = await request.json()
+    const { tripId, ...updates } = body
+
+    if (!tripId) {
+      return NextResponse.json(
+        { error: 'Trip ID is required' },
+        { status: 400 }
+      )
+    }
+
+    // Update trip (implementation would depend on specific update logic)
+    // For now, return success message
+    return NextResponse.json({
+      success: true,
+      message: 'Trip updated successfully'
+    })
+>>>>>>> main
   } catch (error) {
     console.error('Error updating trip:', error)
     return NextResponse.json(
@@ -157,4 +275,8 @@ export async function PATCH(request: NextRequest) {
       { status: 500 }
     )
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main

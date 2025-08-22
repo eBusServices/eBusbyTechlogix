@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+<<<<<<< HEAD
+=======
+    "@vercel/postgres": "^0.10.0",
+>>>>>>> main
     "bcryptjs": "^2.4.3",
     "clsx": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
@@ -25,7 +29,11 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
+<<<<<<< HEAD
     "@types/node": "^20",
+=======
+    "@types/node": "^20.19.11",
+>>>>>>> main
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
