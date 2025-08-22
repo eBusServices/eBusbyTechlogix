@@ -227,10 +227,10 @@ export default function AdminLoginPage() {
 
           {/* Demo Login Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Admin Login</h4>
+            <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Access</h4>
             <p className="text-xs text-blue-700">
-              <strong>Email:</strong> admin@techlogix.com<br />
-              <strong>Password:</strong> admin123
+              Contact system administrator for demo credentials.<br />
+              <strong>Support:</strong> +234 810 733 8827
             </p>
           </div>
 

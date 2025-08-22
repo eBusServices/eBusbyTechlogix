@@ -194,10 +194,10 @@ export default function LoginPage() {
 
           {/* Demo Login Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Login</h4>
+            <h4 className="text-sm font-medium text-blue-800 mb-2">New User?</h4>
             <p className="text-xs text-blue-700">
-              <strong>Admin:</strong> admin@techlogix.com / admin123<br />
-              <strong>Driver:</strong> Use driver login page with DRV001 / driver123
+              Create your account to book trips and track your journey.<br />
+              <strong>Support:</strong> +234 810 733 8827
             </p>
           </div>
         </div>

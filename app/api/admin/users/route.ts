@@ -41,7 +41,7 @@ let users = [
   {
     id: '4',
     name: 'Admin User',
-    email: 'admin@techlogix.com',
+    email: process.env.ADMIN_EMAIL || 'demo@admin.com',
     phone: '+234 810 733 8827',
     role: 'admin',
     createdAt: '2024-12-01T00:00:00Z',

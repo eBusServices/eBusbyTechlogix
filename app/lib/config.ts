@@ -2,11 +2,22 @@
 export const config = {
   apiBaseUrl: process.env.NODE_ENV === 'production' 
     ? 'https://e-busby-techlogix.vercel.app' 
-    : 'http://localhost:3001',
+    : 'http://localhost:3000',
   
   // Environment check
   isDevelopment: process.env.NODE_ENV === 'development',
   isProduction: process.env.NODE_ENV === 'production',
+  
+  // Security configuration
+  jwtSecret: process.env.JWT_SECRET || 'fallback_secret_key_change_in_production',
+  
+  // Demo credentials (use environment variables in production)
+  demo: {
+    adminEmail: process.env.ADMIN_EMAIL || 'demo@admin.com',
+    adminPasswordHash: process.env.ADMIN_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2',
+    driverId: process.env.DRIVER_ID || 'DEMO_DRIVER',
+    driverPasswordHash: process.env.DRIVER_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2',
+  },
   
   // API endpoints
   endpoints: {
