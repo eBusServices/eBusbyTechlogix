@@ -30,14 +30,15 @@ export default function Footer() {
                 href="https://wa.me/2348107338827" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-opacity block"
+                className="bg-green-500 hover:bg-green-600 transition-colors rounded-full p-2 block"
+                title="Contact us on WhatsApp"
               >
                 <Image
                   src="/images/whatsapp.png"
                   alt="Contact us on WhatsApp"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
+                  width={24}
+                  height={24}
+                  className="filter brightness-0 invert"
                   quality={90}
                 />
               </a>
@@ -45,14 +46,15 @@ export default function Footer() {
                 href="https://www.facebook.com/profile.php?id=61575500397143" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:opacity-80 transition-opacity block"
+                className="bg-blue-600 hover:bg-blue-700 transition-colors rounded-full p-2 block"
+                title="Follow us on Facebook"
               >
                 <Image
                   src="/images/facebook.png"
                   alt="Follow us on Facebook"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
+                  width={24}
+                  height={24}
+                  className="filter brightness-0 invert"
                   quality={90}
                 />
               </a>

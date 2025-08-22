@@ -313,6 +313,11 @@ export async function updateTrip(tripId: string, updates: Partial<Trip>): Promis
 
 // Booking database functions
 export async function createBooking(bookingData: Omit<Booking, 'id' | 'created_at'>): Promise<Booking> {
+  // Ensure selected_seats is properly stringified for database storage
+  const seatsJson = Array.isArray(bookingData.selected_seats) 
+    ? JSON.stringify(bookingData.selected_seats)
+    : String(bookingData.selected_seats)
+  
   const result = await sql`
     INSERT INTO bookings (booking_reference, user_id, trip_id, passenger_name, phone, email, selected_seats, total_amount, status, payment_status)
     VALUES (
@@ -322,28 +327,63 @@ export async function createBooking(bookingData: Omit<Booking, 'id' | 'created_a
       ${bookingData.passenger_name}, 
       ${bookingData.phone}, 
       ${bookingData.email}, 
-      ${JSON.stringify(bookingData.selected_seats)}, 
+      ${seatsJson}, 
       ${bookingData.total_amount}, 
       ${bookingData.status}, 
       ${bookingData.payment_status}
     )
     RETURNING *
   `
-  return result.rows[0] as Booking
+  
+  const booking = result.rows[0] as any
+  // Parse selected_seats back to array for return
+  if (booking.selected_seats && typeof booking.selected_seats === 'string') {
+    try {
+      booking.selected_seats = JSON.parse(booking.selected_seats)
+    } catch {
+      booking.selected_seats = []
+    }
+  }
+  
+  return booking as Booking
 }
 
 export async function getAllBookings(): Promise<Booking[]> {
   const result = await sql`
     SELECT * FROM bookings ORDER BY created_at DESC
   `
-  return result.rows as Booking[]
+  
+  // Parse selected_seats from JSON string to array for each booking
+  return result.rows.map(booking => {
+    if (booking.selected_seats && typeof booking.selected_seats === 'string') {
+      try {
+        booking.selected_seats = JSON.parse(booking.selected_seats)
+      } catch {
+        booking.selected_seats = []
+      }
+    }
+    return booking
+  }) as Booking[]
 }
 
 export async function getBookingByReference(reference: string): Promise<Booking | null> {
   const result = await sql`
     SELECT * FROM bookings WHERE booking_reference = ${reference}
   `
-  return result.rows[0] as Booking || null
+  
+  const booking = result.rows[0]
+  if (!booking) return null
+  
+  // Parse selected_seats from JSON string to array
+  if (booking.selected_seats && typeof booking.selected_seats === 'string') {
+    try {
+      booking.selected_seats = JSON.parse(booking.selected_seats)
+    } catch {
+      booking.selected_seats = []
+    }
+  }
+  
+  return booking as Booking
 }
 
 export async function getUserBookings(userId: string): Promise<Booking[]> {
