@@ -59,7 +59,17 @@ module.exports = {
         'medium': '0 4px 25px 0 rgba(0, 0, 0, 0.1)',
         'hard': '0 10px 40px 0 rgba(0, 0, 0, 0.15)',
       },
+      textShadow: {
+        'sm': '0 1px 2px rgba(0, 0, 0, 0.05)',
+        'md': '0 2px 4px rgba(0, 0, 0, 0.1)',
+        'lg': '0 4px 8px rgba(0, 0, 0, 0.12)',
+        'xl': '0 8px 16px rgba(0, 0, 0, 0.15)',
+        '2xl': '0 16px 32px rgba(0, 0, 0, 0.2)',
+        'none': 'none'
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-textshadow')
+  ],
 }
