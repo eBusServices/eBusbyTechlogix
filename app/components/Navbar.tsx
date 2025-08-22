@@ -55,6 +55,9 @@ export default function Navbar() {
               <Link href="/auth/login" className="nav-link text-sm xl:text-base">
                 Login
               </Link>
+              <Link href="/admin/login" className="nav-link text-sm xl:text-base">
+                Admin
+              </Link>
               <Link href="/auth/register" className="btn-primary text-sm xl:text-base px-4 py-2 xl:px-6 xl:py-3">
                 Sign Up
               </Link>
@@ -98,6 +101,13 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
               >
                 Login
+              </Link>
+              <Link
+                href="/admin/login"
+                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md"
+                onClick={() => setIsOpen(false)}
+              >
+                Admin
               </Link>
               <Link
                 href="/auth/register"
