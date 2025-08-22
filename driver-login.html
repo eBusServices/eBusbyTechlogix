@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Driver Login - TechLogix</title>
+  <link rel="icon" href="images/logo.jpg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+  <!-- Navbar fixed at top -->
+  <nav class="bg-blue-200 p-4 flex justify-between items-center shadow-md">
+    <div class="flex items-center gap-2">
+      <img src="images/logo.jpg" alt="Logo" class="h-8 w-8 rounded-full">
+      <span class="text-xl font-bold">e-Bus Services by TechLogix Solutions Ltd.</span>
+    </div>
+    <ul class="flex gap-4">
+      <li><a href="index.html" class="hover:underline">Home Page</a></li>
+      <li><a href="branches.html" class="hover:underline">Branches</a></li>
+      <li><a href="#" class="hover:underline">Turns</a></li>
+      <li><a href="book.html" class="hover:underline">Book Trip</a></li>
+      <li><a href="#" class="hover:underline">Find Ticket</a></li>
+    </ul>
+  </nav>
+
+  <!-- Centered login form -->
+  <div class="flex-grow flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+      <div class="flex items-center gap-2 justify-center mb-6">
+        <img src="images/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full">
+        <span class="text-lg font-bold">TechLogix Driver</span>
+      </div>
+
+      <h1 class="text-2xl font-bold mb-6 text-center">Driver Login</h1>
+
+      <form action="driver-dashboard.html" method="GET">
+        <label class="block mb-2 text-gray-600">Driver ID</label>
+        <input type="text" name="driverid" class="w-full p-2 border rounded mb-4" placeholder="Enter driver ID" required>
+
+        <label class="block mb-2 text-gray-600">Password</label>
+        <input type="password" name="password" class="w-full p-2 border rounded mb-6" placeholder="Enter password" required>
+
+        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">Login</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
