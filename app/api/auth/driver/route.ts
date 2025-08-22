@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
-import { config } from '../../lib/config'
+import { config } from '../../../lib/config'
 
 // Mock database for drivers
 let drivers = [
