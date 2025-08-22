@@ -9,14 +9,13 @@ export const config = {
   isProduction: process.env.NODE_ENV === 'production',
   
   // Security configuration
-  jwtSecret: process.env.JWT_SECRET || 'fallback_secret_key_change_in_production',
+  jwtSecret: process.env.JWT_SECRET || 'development_jwt_secret_not_for_production',
   
-  // Demo credentials (use environment variables in production)
+  // Demo credentials (ONLY for development - use environment variables in production)
   demo: {
     adminEmail: process.env.ADMIN_EMAIL || 'admin@techlogix.com',
-    adminPasswordHash: process.env.ADMIN_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2', // admin123
-    driverId: process.env.DRIVER_ID || 'DRV001',
-    driverPasswordHash: process.env.DRIVER_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2', // driver123
+    driverId: process.env.DRIVER_1_ID || 'DRV001',
+    // Password hashes removed for security - use environment variables
   },
   
   // API endpoints

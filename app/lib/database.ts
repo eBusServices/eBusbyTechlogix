@@ -145,35 +145,53 @@ export async function initializeDatabase() {
 // Seed initial data (admin user, sample drivers, trips)
 async function seedInitialData() {
   try {
+    // Get credentials from environment variables
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@techlogix.com'
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+    const adminPhone = process.env.ADMIN_PHONE || '+234 810 733 8827'
+    
+    const driverPassword = process.env.DRIVER_PASSWORD || 'driver123'
+    const driver1Id = process.env.DRIVER_1_ID || 'DRV001'
+    const driver1Name = process.env.DRIVER_1_NAME || 'Samuel Oche'
+    const driver1Email = process.env.DRIVER_1_EMAIL || 'samuel@techlogix.com'
+    const driver1Phone = process.env.DRIVER_1_PHONE || '+234 810 733 8830'
+    const driver1License = process.env.DRIVER_1_LICENSE || 'ABC123456789'
+    
+    const driver2Id = process.env.DRIVER_2_ID || 'DRV002'
+    const driver2Name = process.env.DRIVER_2_NAME || 'Michael Adah'
+    const driver2Email = process.env.DRIVER_2_EMAIL || 'michael@techlogix.com'
+    const driver2Phone = process.env.DRIVER_2_PHONE || '+234 810 733 8831'
+    const driver2License = process.env.DRIVER_2_LICENSE || 'DEF987654321'
+
     // Check if admin user exists
     const adminExists = await sql`
-      SELECT id FROM users WHERE email = 'admin@techlogix.com'
+      SELECT id FROM users WHERE email = ${adminEmail}
     `
 
     if (adminExists.rows.length === 0) {
       // Create admin user
-      const adminPasswordHash = await bcrypt.hash('admin123', 12)
+      const adminPasswordHash = await bcrypt.hash(adminPassword, 12)
       await sql`
         INSERT INTO users (name, username, email, phone, password, role, is_verified)
-        VALUES ('Admin User', 'admin', 'admin@techlogix.com', '+234 810 733 8827', ${adminPasswordHash}, 'admin', true)
+        VALUES ('Admin User', 'admin', ${adminEmail}, ${adminPhone}, ${adminPasswordHash}, 'admin', true)
       `
       console.log('Admin user created')
     }
 
     // Check if sample drivers exist
     const driversExist = await sql`
-      SELECT id FROM drivers WHERE driver_id = 'DRV001'
+      SELECT id FROM drivers WHERE driver_id = ${driver1Id}
     `
 
     if (driversExist.rows.length === 0) {
-      const driverPasswordHash = await bcrypt.hash('driver123', 12)
+      const driverPasswordHash = await bcrypt.hash(driverPassword, 12)
       
       // Create sample drivers
       await sql`
         INSERT INTO drivers (driver_id, name, email, phone, password, license_number, experience)
         VALUES 
-          ('DRV001', 'Samuel Oche', 'samuel@techlogix.com', '+234 810 733 8830', ${driverPasswordHash}, 'ABC123456789', '5 years'),
-          ('DRV002', 'Michael Adah', 'michael@techlogix.com', '+234 810 733 8831', ${driverPasswordHash}, 'DEF987654321', '8 years')
+          (${driver1Id}, ${driver1Name}, ${driver1Email}, ${driver1Phone}, ${driverPasswordHash}, ${driver1License}, '5 years'),
+          (${driver2Id}, ${driver2Name}, ${driver2Email}, ${driver2Phone}, ${driverPasswordHash}, ${driver2License}, '8 years')
       `
       console.log('Sample drivers created')
     }
@@ -278,18 +296,18 @@ export async function createTrip(tripData: Omit<Trip, 'id' | 'created_at'>): Pro
 }
 
 export async function updateTrip(tripId: string, updates: Partial<Trip>): Promise<Trip> {
-  const setClause = Object.entries(updates)
-    .filter(([_, value]) => value !== undefined)
-    .map(([key, _], index) => `${key} = $${index + 2}`)
-    .join(', ')
+  // For now, implement a simple status update
+  if (updates.status) {
+    const result = await sql`
+      UPDATE trips SET status = ${updates.status} WHERE id = ${tripId} RETURNING *
+    `
+    return result.rows[0] as Trip
+  }
   
-  const values = Object.values(updates).filter(value => value !== undefined)
-  
-  const result = await sql.query(
-    `UPDATE trips SET ${setClause} WHERE id = $1 RETURNING *`,
-    [tripId, ...values]
-  )
-  
+  // For more complex updates, we can expand this later
+  const result = await sql`
+    SELECT * FROM trips WHERE id = ${tripId}
+  `
   return result.rows[0] as Trip
 }
 
@@ -297,7 +315,18 @@ export async function updateTrip(tripId: string, updates: Partial<Trip>): Promis
 export async function createBooking(bookingData: Omit<Booking, 'id' | 'created_at'>): Promise<Booking> {
   const result = await sql`
     INSERT INTO bookings (booking_reference, user_id, trip_id, passenger_name, phone, email, selected_seats, total_amount, status, payment_status)
-    VALUES (${bookingData.booking_reference}, ${bookingData.user_id || null}, ${bookingData.trip_id}, ${bookingData.passenger_name}, ${bookingData.phone}, ${bookingData.email}, ${bookingData.selected_seats}, ${bookingData.total_amount}, ${bookingData.status}, ${bookingData.payment_status})
+    VALUES (
+      ${bookingData.booking_reference}, 
+      ${bookingData.user_id || null}, 
+      ${bookingData.trip_id}, 
+      ${bookingData.passenger_name}, 
+      ${bookingData.phone}, 
+      ${bookingData.email}, 
+      ${JSON.stringify(bookingData.selected_seats)}, 
+      ${bookingData.total_amount}, 
+      ${bookingData.status}, 
+      ${bookingData.payment_status}
+    )
     RETURNING *
   `
   return result.rows[0] as Booking

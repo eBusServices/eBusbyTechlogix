@@ -197,8 +197,8 @@ export default function LoginPage() {
             <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Access</h4>
             <p className="text-xs text-blue-700">
               <strong>New User?</strong> Register to create your account<br />
-              <strong>Demo Admin:</strong> admin@techlogix.com / admin123<br />
-              <strong>Demo Driver:</strong> Use driver login with DRV001 / driver123
+              <strong>Demo Admin:</strong> Contact administrator for credentials<br />
+              <strong>Demo Driver:</strong> Contact administrator for credentials
             </p>
           </div>
         </div>

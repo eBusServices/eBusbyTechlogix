@@ -198,11 +198,9 @@ export default function DriverLoginPage() {
 
           {/* Demo Login Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Driver Access</h4>
+            <h4 className="text-sm font-medium text-blue-800 mb-2">Driver Access</h4>
             <p className="text-xs text-blue-700">
-              <strong>Driver ID:</strong> DRV001<br />
-              <strong>Password:</strong> driver123<br />
-              <em>For demonstration purposes only</em>
+              <em>Contact administrator for driver credentials</em>
             </p>
           </div>
         </div>
