@@ -85,20 +85,20 @@ export default function LoginPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                Email or Username
               </label>
               <div className="mt-1 relative">
                 <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
                   className="input-field pl-10"
-                  placeholder="Enter your email"
+                  placeholder="Enter your email or username"
                 />
               </div>
             </div>
@@ -194,10 +194,11 @@ export default function LoginPage() {
 
           {/* Demo Login Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-800 mb-2">New User?</h4>
+            <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Access</h4>
             <p className="text-xs text-blue-700">
-              Create your account to book trips and track your journey.<br />
-              <strong>Support:</strong> +234 810 733 8827
+              <strong>New User?</strong> Register to create your account<br />
+              <strong>Demo Admin:</strong> admin@techlogix.com / admin123<br />
+              <strong>Demo Driver:</strong> Use driver login with DRV001 / driver123
             </p>
           </div>
         </div>

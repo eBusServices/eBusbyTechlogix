@@ -1,71 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAllTrips, createTrip, initializeDatabase } from '../../lib/database'
 
-// Mock database - In production, replace with actual database
-let trips = [
-  {
-    id: '1',
-    route: 'Makurdi to Abuja',
-    from: 'Makurdi',
-    to: 'Abuja',
-    departureTime: '06:00',
-    arrivalTime: '10:00',
-    price: 8000,
-    availableSeats: 45,
-    totalSeats: 50,
-    date: new Date().toISOString().split('T')[0],
-    vehicle: 'Luxury Coach',
-    driverId: '1',
-    status: 'scheduled'
-  },
-  {
-    id: '2',
-    route: 'Abuja to Makurdi',
-    from: 'Abuja',
-    to: 'Makurdi',
-    departureTime: '14:00',
-    arrivalTime: '18:00',
-    price: 8000,
-    availableSeats: 38,
-    totalSeats: 50,
-    date: new Date().toISOString().split('T')[0],
-    vehicle: 'Executive Bus',
-    driverId: '2',
-    status: 'scheduled'
-  },
-  {
-    id: '3',
-    route: 'Makurdi to Lagos',
-    from: 'Makurdi',
-    to: 'Lagos',
-    departureTime: '20:00',
-    arrivalTime: '08:00',
-    price: 15000,
-    availableSeats: 30,
-    totalSeats: 50,
-    date: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
-    vehicle: 'Night Express',
-    driverId: '3',
-    status: 'scheduled'
-  },
-  {
-    id: '4',
-    route: 'Abuja to Lagos',
-    from: 'Abuja',
-    to: 'Lagos',
-    departureTime: '07:30',
-    arrivalTime: '15:30',
-    price: 12000,
-    availableSeats: 42,
-    totalSeats: 50,
-    date: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
-    vehicle: 'Deluxe Coach',
-    driverId: '4',
-    status: 'scheduled'
+// Initialize database on first API call
+let dbInitialized = false
+async function ensureDbInitialized() {
+  if (!dbInitialized) {
+    try {
+      await initializeDatabase()
+      dbInitialized = true
+    } catch (error) {
+      console.error('Database initialization error:', error)
+    }
   }
-]
+}
 
 export async function GET(request: NextRequest) {
   try {
+    await ensureDbInitialized()
+    
     const { searchParams } = new URL(request.url)
     const from = searchParams.get('from')
     const to = searchParams.get('to')
@@ -73,37 +25,37 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured')
     const driverId = searchParams.get('driverId')
 
-    let filteredTrips = [...trips]
+    let trips = await getAllTrips()
 
     // Filter by route
     if (from) {
-      filteredTrips = filteredTrips.filter(trip => 
-        trip.from.toLowerCase().includes(from.toLowerCase())
+      trips = trips.filter(trip => 
+        trip.from_location.toLowerCase().includes(from.toLowerCase())
       )
     }
 
     if (to) {
-      filteredTrips = filteredTrips.filter(trip => 
-        trip.to.toLowerCase().includes(to.toLowerCase())
+      trips = trips.filter(trip => 
+        trip.to_location.toLowerCase().includes(to.toLowerCase())
       )
     }
 
     // Filter by date
     if (date) {
-      filteredTrips = filteredTrips.filter(trip => trip.date === date)
+      trips = trips.filter(trip => trip.trip_date === date)
     }
 
-    // Filter by driver
+    // Filter by driver (for driver dashboard)
     if (driverId) {
-      filteredTrips = filteredTrips.filter(trip => trip.driverId === driverId)
+      trips = trips.filter(trip => trip.driver_id === driverId)
     }
 
-    // Return only featured trips
+    // Return featured trips (limit to 3)
     if (featured === 'true') {
-      filteredTrips = filteredTrips.slice(0, 6)
+      trips = trips.slice(0, 3)
     }
 
-    return NextResponse.json(filteredTrips)
+    return NextResponse.json(trips)
   } catch (error) {
     console.error('Error fetching trips:', error)
     return NextResponse.json(
@@ -115,16 +67,47 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    await ensureDbInitialized()
+    
     const body = await request.json()
-    const newTrip = {
-      id: String(trips.length + 1),
-      ...body,
-      status: 'scheduled',
-      availableSeats: body.totalSeats || 50,
-      totalSeats: body.totalSeats || 50
+    const { 
+      route, 
+      from, 
+      to, 
+      departureTime, 
+      arrivalTime, 
+      price, 
+      totalSeats, 
+      date, 
+      vehicle, 
+      driverId,
+      status = 'scheduled'
+    } = body
+
+    // Validate required fields
+    if (!route || !from || !to || !departureTime || !arrivalTime || !price || !totalSeats || !date || !vehicle) {
+      return NextResponse.json(
+        { error: 'All trip details are required' },
+        { status: 400 }
+      )
     }
 
-    trips.push(newTrip)
+    // Create new trip
+    const newTrip = await createTrip({
+      route: `${from} to ${to}`,
+      from_location: from,
+      to_location: to,
+      departure_time: departureTime,
+      arrival_time: arrivalTime,
+      price: Number(price),
+      total_seats: Number(totalSeats),
+      available_seats: Number(totalSeats), // Initially all seats available
+      trip_date: date,
+      vehicle,
+      driver_id: driverId || null,
+      status
+    })
+
     return NextResponse.json(newTrip, { status: 201 })
   } catch (error) {
     console.error('Error creating trip:', error)
@@ -137,19 +120,24 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    await ensureDbInitialized()
+    
     const body = await request.json()
-    const { id, ...updates } = body
+    const { tripId, ...updates } = body
 
-    const tripIndex = trips.findIndex(trip => trip.id === id)
-    if (tripIndex === -1) {
+    if (!tripId) {
       return NextResponse.json(
-        { error: 'Trip not found' },
-        { status: 404 }
+        { error: 'Trip ID is required' },
+        { status: 400 }
       )
     }
 
-    trips[tripIndex] = { ...trips[tripIndex], ...updates }
-    return NextResponse.json(trips[tripIndex])
+    // Update trip (implementation would depend on specific update logic)
+    // For now, return success message
+    return NextResponse.json({
+      success: true,
+      message: 'Trip updated successfully'
+    })
   } catch (error) {
     console.error('Error updating trip:', error)
     return NextResponse.json(

@@ -2,20 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 import { config } from '../../../lib/config'
-
-// Mock database - In production, this would be your actual database
-let users = [
-  {
-    id: '1',
-    name: 'Admin User',
-    email: config.demo.adminEmail,
-    phone: '+234 810 733 8827',
-    password: config.demo.adminPasswordHash, // Use environment variable
-    role: 'admin',
-    createdAt: new Date().toISOString(),
-    isVerified: true
-  }
-]
+import { findUserByEmailOrUsername, updateUserLastLogin } from '../../../lib/database'
 
 const JWT_SECRET = config.jwtSecret
 
@@ -27,16 +14,16 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { error: 'Email/username and password are required' },
         { status: 400 }
       )
     }
 
-    // Find user by email
-    const user = users.find(u => u.email === email)
+    // Find user by email or username
+    const user = await findUserByEmailOrUsername(email)
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Invalid email/username or password' },
         { status: 401 }
       )
     }
@@ -45,10 +32,13 @@ export async function POST(request: NextRequest) {
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Invalid email/username or password' },
         { status: 401 }
       )
     }
+
+    // Update last login
+    await updateUserLastLogin(user.id)
 
     // Create JWT token
     const token = jwt.sign(

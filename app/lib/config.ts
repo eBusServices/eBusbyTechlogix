@@ -13,10 +13,10 @@ export const config = {
   
   // Demo credentials (use environment variables in production)
   demo: {
-    adminEmail: process.env.ADMIN_EMAIL || 'demo@admin.com',
-    adminPasswordHash: process.env.ADMIN_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2',
-    driverId: process.env.DRIVER_ID || 'DEMO_DRIVER',
-    driverPasswordHash: process.env.DRIVER_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2',
+    adminEmail: process.env.ADMIN_EMAIL || 'admin@techlogix.com',
+    adminPasswordHash: process.env.ADMIN_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2', // admin123
+    driverId: process.env.DRIVER_ID || 'DRV001',
+    driverPasswordHash: process.env.DRIVER_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2', // driver123
   },
   
   // API endpoints

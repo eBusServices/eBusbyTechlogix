@@ -1,22 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
+import { config } from '../../../lib/config'
+import { createUser, findUserByEmail, findUserByUsername } from '../../../lib/database'
 
-// Mock database for users
-let users: any[] = []
-let userCounter = 1
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+const JWT_SECRET = config.jwtSecret
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, phone, password, confirmPassword } = body
+    const { name, username, email, phone, password, confirmPassword } = body
 
     // Validate required fields
     if (!name || !email || !phone || !password || !confirmPassword) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: 'Name, email, phone, and password are required' },
         { status: 400 }
       )
     }
@@ -46,32 +44,39 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user already exists
-    const existingUser = users.find(u => u.email === email)
-    if (existingUser) {
+    // Check if email already exists
+    const existingEmail = await findUserByEmail(email)
+    if (existingEmail) {
       return NextResponse.json(
         { error: 'User with this email already exists' },
         { status: 409 }
       )
     }
 
+    // Check if username already exists (if provided)
+    if (username) {
+      const existingUsername = await findUserByUsername(username)
+      if (existingUsername) {
+        return NextResponse.json(
+          { error: 'Username already taken' },
+          { status: 409 }
+        )
+      }
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12)
 
     // Create user
-    const user = {
-      id: userCounter.toString(),
+    const user = await createUser({
       name,
+      username: username || undefined,
       email,
       phone,
       password: hashedPassword,
       role: 'passenger',
-      createdAt: new Date().toISOString(),
-      isVerified: false
-    }
-
-    users.push(user)
-    userCounter++
+      is_verified: false
+    })
 
     // Create JWT token
     const token = jwt.sign(

@@ -2,39 +2,27 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 import { config } from '../../../lib/config'
-
-// Mock database for drivers
-let drivers = [
-  {
-    id: '1',
-    driverId: config.demo.driverId,
-    name: 'Samuel Oche',
-    email: 'samuel@techlogix.com',
-    phone: '+234 810 733 8830',
-    password: config.demo.driverPasswordHash, // Use environment variable
-    licenseNumber: 'ABC123456789',
-    experience: '5 years',
-    status: 'active',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: '2',
-    driverId: 'DRV002',
-    name: 'Michael Adah',
-    email: 'michael@techlogix.com',
-    phone: '+234 810 733 8831',
-    password: config.demo.driverPasswordHash, // Use environment variable
-    licenseNumber: 'DEF987654321',
-    experience: '8 years',
-    status: 'active',
-    createdAt: new Date().toISOString()
-  }
-]
+import { findDriverById, getAllDrivers, initializeDatabase } from '../../../lib/database'
 
 const JWT_SECRET = config.jwtSecret
 
+// Initialize database on first API call
+let dbInitialized = false
+async function ensureDbInitialized() {
+  if (!dbInitialized) {
+    try {
+      await initializeDatabase()
+      dbInitialized = true
+    } catch (error) {
+      console.error('Database initialization error:', error)
+    }
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
+    await ensureDbInitialized()
+    
     const body = await request.json()
     const { driverId, password } = body
 
@@ -47,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find driver by driverId
-    const driver = drivers.find(d => d.driverId === driverId)
+    const driver = await findDriverById(driverId)
     if (!driver) {
       return NextResponse.json(
         { error: 'Invalid driver ID or password' },
@@ -74,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     // Create JWT token
     const token = jwt.sign(
-      { userId: driver.id, driverId: driver.driverId, role: 'driver' },
+      { userId: driver.id, driverId: driver.driver_id, role: 'driver' },
       JWT_SECRET,
       { expiresIn: '7d' }
     )
@@ -100,10 +88,11 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    await ensureDbInitialized()
+    
     // Return all active drivers (for admin use)
-    const activeDrivers = drivers
-      .filter(d => d.status === 'active')
-      .map(({ password, ...driver }) => driver)
+    const allDrivers = await getAllDrivers()
+    const activeDrivers = allDrivers.map(({ password, ...driver }) => driver)
 
     return NextResponse.json(activeDrivers)
   } catch (error) {
