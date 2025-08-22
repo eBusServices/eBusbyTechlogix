@@ -1,22 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
+import { config } from '../../../lib/config'
 
 // Mock database - In production, this would be your actual database
 let users = [
   {
     id: '1',
     name: 'Admin User',
-    email: 'admin@techlogix.com',
+    email: config.demo.adminEmail,
     phone: '+234 810 733 8827',
-    password: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2', // password: admin123
+    password: config.demo.adminPasswordHash, // Use environment variable
     role: 'admin',
     createdAt: new Date().toISOString(),
     isVerified: true
   }
 ]
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+const JWT_SECRET = config.jwtSecret
 
 export async function POST(request: NextRequest) {
   try {

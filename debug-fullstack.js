@@ -332,9 +332,10 @@ console.log('Admin Panel: https://e-busby-techlogix.vercel.app/admin/login');
 console.log('Driver Portal: https://e-busby-techlogix.vercel.app/driver/login');
 console.log();
 
-console.log('🔑 DEMO CREDENTIALS:');
-console.log('Admin: admin@techlogix.com / admin123');
-console.log('Driver: DRV001 / driver123');
+console.log('🔑 SECURITY STATUS:');
+console.log('✅ All credentials moved to environment variables');
+console.log('✅ No hardcoded passwords in public repository');
+console.log('✅ Contact support for demo access: +234 810 733 8827');
 console.log();
 
 console.log('🎉 FULLSTACK DEBUGGING COMPLETE!');

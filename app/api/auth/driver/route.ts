@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
+import { config } from '../../lib/config'
 
 // Mock database for drivers
 let drivers = [
   {
     id: '1',
-    driverId: 'DRV001',
+    driverId: config.demo.driverId,
     name: 'Samuel Oche',
     email: 'samuel@techlogix.com',
     phone: '+234 810 733 8830',
-    password: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2', // password: driver123
+    password: config.demo.driverPasswordHash, // Use environment variable
     licenseNumber: 'ABC123456789',
     experience: '5 years',
     status: 'active',
@@ -22,7 +23,7 @@ let drivers = [
     name: 'Michael Adah',
     email: 'michael@techlogix.com',
     phone: '+234 810 733 8831',
-    password: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsHEp/Gp2', // password: driver123
+    password: config.demo.driverPasswordHash, // Use environment variable
     licenseNumber: 'DEF987654321',
     experience: '8 years',
     status: 'active',
@@ -30,7 +31,7 @@ let drivers = [
   }
 ]
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+const JWT_SECRET = config.jwtSecret
 
 export async function POST(request: NextRequest) {
   try {
