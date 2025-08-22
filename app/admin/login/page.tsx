@@ -101,32 +101,20 @@ export default function AdminLoginPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-<<<<<<< HEAD
-                Admin Email
-=======
                 Admin Email or Username
->>>>>>> main
               </label>
               <div className="mt-1 relative">
                 <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   id="email"
                   name="email"
-<<<<<<< HEAD
-                  type="email"
-=======
                   type="text"
->>>>>>> main
                   autoComplete="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
                   className="input-field pl-10"
-<<<<<<< HEAD
-                  placeholder="Enter admin email"
-=======
                   placeholder="Enter admin email or username"
->>>>>>> main
                 />
               </div>
             </div>
@@ -239,19 +227,9 @@ export default function AdminLoginPage() {
 
           {/* Demo Login Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-<<<<<<< HEAD
             <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Access</h4>
             <p className="text-xs text-blue-700">
-              Contact system administrator for demo credentials.<br />
-              <strong>Support:</strong> +234 810 733 8827
-=======
-            <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Admin Access</h4>
-            <p className="text-xs text-blue-700">
-              <strong>Email:</strong> admin@techlogix.com<br />
-              <strong>Username:</strong> admin<br />
-              <strong>Password:</strong> admin123<br />
-              <em>Use either email or username to login</em>
->>>>>>> main
+              <em>Contact administrator for credentials</em>
             </p>
           </div>
 

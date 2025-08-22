@@ -16,10 +16,7 @@ export default function RegisterPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: '',
-<<<<<<< HEAD
-=======
     username: '',
->>>>>>> main
     email: '',
     phone: '',
     password: '',
@@ -148,8 +145,6 @@ export default function RegisterPage() {
             </div>
 
             <div>
-<<<<<<< HEAD
-=======
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                 Username <span className="text-gray-400">(optional)</span>
               </label>
@@ -169,7 +164,6 @@ export default function RegisterPage() {
             </div>
 
             <div>
->>>>>>> main
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>

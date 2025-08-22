@@ -85,32 +85,20 @@ export default function LoginPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-<<<<<<< HEAD
-                Email address
-=======
                 Email or Username
->>>>>>> main
               </label>
               <div className="mt-1 relative">
                 <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   id="email"
                   name="email"
-<<<<<<< HEAD
-                  type="email"
-=======
                   type="text"
->>>>>>> main
                   autoComplete="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
                   className="input-field pl-10"
-<<<<<<< HEAD
-                  placeholder="Enter your email"
-=======
                   placeholder="Enter your email or username"
->>>>>>> main
                 />
               </div>
             </div>
@@ -206,18 +194,11 @@ export default function LoginPage() {
 
           {/* Demo Login Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-<<<<<<< HEAD
-            <h4 className="text-sm font-medium text-blue-800 mb-2">New User?</h4>
-            <p className="text-xs text-blue-700">
-              Create your account to book trips and track your journey.<br />
-              <strong>Support:</strong> +234 810 733 8827
-=======
             <h4 className="text-sm font-medium text-blue-800 mb-2">Demo Access</h4>
             <p className="text-xs text-blue-700">
               <strong>New User?</strong> Register to create your account<br />
               <strong>Demo Admin:</strong> Contact administrator for credentials<br />
               <strong>Demo Driver:</strong> Contact administrator for credentials
->>>>>>> main
             </p>
           </div>
         </div>

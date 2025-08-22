@@ -1,45 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as bcrypt from 'bcryptjs'
-import * as jwt from 'jsonwebtoken'
-import { config } from '../../../lib/config'
-<<<<<<< HEAD
-
-// Mock database for drivers
-let drivers = [
-  {
-    id: '1',
-    driverId: config.demo.driverId,
-    name: 'Samuel Oche',
-    email: 'samuel@techlogix.com',
-    phone: '+234 810 733 8830',
-    password: config.demo.driverPasswordHash, // Use environment variable
-    licenseNumber: 'ABC123456789',
-    experience: '5 years',
-    status: 'active',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: '2',
-    driverId: 'DRV002',
-    name: 'Michael Adah',
-    email: 'michael@techlogix.com',
-    phone: '+234 810 733 8831',
-    password: config.demo.driverPasswordHash, // Use environment variable
-    licenseNumber: 'DEF987654321',
-    experience: '8 years',
-    status: 'active',
-    createdAt: new Date().toISOString()
-  }
-]
-
-const JWT_SECRET = config.jwtSecret
-
-export async function POST(request: NextRequest) {
-  try {
-=======
+import { signToken } from '../../../lib/jwt'
 import { findDriverById, getAllDrivers, initializeDatabase } from '../../../lib/database'
-
-const JWT_SECRET = config.jwtSecret
 
 // Initialize database on first API call
 let dbInitialized = false
@@ -54,11 +16,23 @@ async function ensureDbInitialized() {
   }
 }
 
+export async function GET() {
+  try {
+    await ensureDbInitialized()
+    const drivers = await getAllDrivers()
+    return NextResponse.json(drivers)
+  } catch (error) {
+    console.error('Driver GET error:', error)
+    return NextResponse.json(
+      { error: 'Failed to fetch drivers' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     await ensureDbInitialized()
-    
->>>>>>> main
     const body = await request.json()
     const { driverId, password } = body
 
@@ -71,11 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find driver by driverId
-<<<<<<< HEAD
-    const driver = drivers.find(d => d.driverId === driverId)
-=======
     const driver = await findDriverById(driverId)
->>>>>>> main
     if (!driver) {
       return NextResponse.json(
         { error: 'Invalid driver ID or password' },
@@ -83,73 +53,36 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if driver is active
-    if (driver.status !== 'active') {
-      return NextResponse.json(
-        { error: 'Driver account is not active. Contact administrator.' },
-        { status: 401 }
-      )
-    }
-
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, driver.password)
-    if (!isPasswordValid) {
+    const isValidPassword = await bcrypt.compare(password, driver.password)
+    if (!isValidPassword) {
       return NextResponse.json(
         { error: 'Invalid driver ID or password' },
         { status: 401 }
       )
     }
 
-    // Create JWT token
-    const token = jwt.sign(
-<<<<<<< HEAD
-      { userId: driver.id, driverId: driver.driverId, role: 'driver' },
-=======
-      { userId: driver.id, driverId: driver.driver_id, role: 'driver' },
->>>>>>> main
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    )
+    // Generate JWT token
+    const token = signToken({
+      driverId: driver.driver_id,
+      id: driver.id,
+      name: driver.name,
+      email: driver.email,
+      role: 'driver'
+    })
 
-    // Remove password from response
-    const { password: _, ...driverWithoutPassword } = driver
-
+    // Return success response (excluding password)
+    const { password: _, ...driverData } = driver
     return NextResponse.json({
-      success: true,
-      message: 'Driver login successful',
-      driver: driverWithoutPassword,
-      token
+      message: 'Login successful',
+      token,
+      driver: driverData
     })
 
   } catch (error) {
     console.error('Driver login error:', error)
     return NextResponse.json(
-      { error: 'Login failed' },
-      { status: 500 }
-    )
-  }
-}
-
-export async function GET(request: NextRequest) {
-  try {
-<<<<<<< HEAD
-    // Return all active drivers (for admin use)
-    const activeDrivers = drivers
-      .filter(d => d.status === 'active')
-      .map(({ password, ...driver }) => driver)
-=======
-    await ensureDbInitialized()
-    
-    // Return all active drivers (for admin use)
-    const allDrivers = await getAllDrivers()
-    const activeDrivers = allDrivers.map(({ password, ...driver }) => driver)
->>>>>>> main
-
-    return NextResponse.json(activeDrivers)
-  } catch (error) {
-    console.error('Error fetching drivers:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch drivers' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
