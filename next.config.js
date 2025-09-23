@@ -9,5 +9,4 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 }
-
-module.exports = nextConfig
+export default nextConfig
