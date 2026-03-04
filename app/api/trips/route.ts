@@ -141,21 +141,30 @@ export async function POST(request: NextRequest) {
   try {
     await ensureDbInitialized()
     const body = await request.json()
-    const {
-      route,
-      from_location,
-      to_location,
-      departure_time,
-      arrival_time,
-      price,
-      total_seats,
-      trip_date,
-      vehicle,
-      driver_id
-    } = body
+    const fromLocation = body.from_location ?? body.from
+    const toLocation = body.to_location ?? body.to
+    const departureTime = body.departure_time ?? body.departureTime
+    const arrivalTime = body.arrival_time ?? body.arrivalTime
+    const totalSeats = body.total_seats ?? body.totalSeats
+    const tripDate = body.trip_date ?? body.date
+    const route = body.route || `${fromLocation || ''} to ${toLocation || ''}`.trim()
+    const driverId = body.driver_id ?? body.driverId ?? null
+    const price = Number(body.price)
+    const seats = Number(totalSeats)
 
     // Validate required fields
-    if (!route || !from_location || !to_location || !departure_time || !arrival_time || !price || !total_seats || !trip_date || !vehicle) {
+    if (
+      !route ||
+      !fromLocation ||
+      !toLocation ||
+      !departureTime ||
+      !arrivalTime ||
+      !tripDate ||
+      !body.vehicle ||
+      !Number.isFinite(price) ||
+      !Number.isFinite(seats) ||
+      seats <= 0
+    ) {
       return NextResponse.json(
         { error: 'All trip fields are required' },
         { status: 400 }
@@ -165,23 +174,20 @@ export async function POST(request: NextRequest) {
     // Create trip
     const trip = await createTrip({
       route,
-      from_location,
-      to_location,
-      departure_time,
-      arrival_time,
-      price: Number(price),
-      total_seats: Number(total_seats),
-      available_seats: Number(total_seats),
-      trip_date,
-      vehicle,
-      driver_id: driver_id || null,
+      from_location: fromLocation,
+      to_location: toLocation,
+      departure_time: departureTime,
+      arrival_time: arrivalTime,
+      price,
+      total_seats: seats,
+      available_seats: seats,
+      trip_date: tripDate,
+      vehicle: body.vehicle,
+      driver_id: driverId,
       status: 'scheduled'
     })
 
-    return NextResponse.json({
-      message: 'Trip created successfully',
-      trip
-    })
+    return NextResponse.json(mapTripForClient(trip))
 
   } catch (error) {
     console.error('Trip creation error:', error)

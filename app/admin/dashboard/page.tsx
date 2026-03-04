@@ -157,13 +157,18 @@ export default function AdminDashboardPage() {
       })
 
       if (response.ok) {
-        const newTrip = await response.json()
+        const data = await response.json()
+        const newTrip = data?.trip ?? data
         setTrips(prev => [...prev, newTrip])
         setShowTripModal(false)
         fetchDashboardData() // Refresh data
+      } else {
+        const errorData = await response.json().catch(() => ({}))
+        alert(errorData.error || 'Failed to create trip')
       }
     } catch (error) {
       console.error('Error creating trip:', error)
+      alert('Failed to create trip')
     }
   }
 
