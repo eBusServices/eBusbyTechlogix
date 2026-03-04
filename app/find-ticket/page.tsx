@@ -35,6 +35,46 @@ interface BookingDetails {
   bookingDate: string
 }
 
+const CITY_ADDRESS_LINES: Record<string, string[]> = {
+  makurdi: [
+    'TMT Plaza, Wurukum, Makurdi',
+    '(Before Salvation Ministries',
+    'Church, formerly AfriBank)'
+  ],
+  abuja: [
+    'Area 3, Trinity Garden,',
+    'Nnamdi Azikiwe Expy Junction,',
+    'Abuja, FCT'
+  ],
+  'port harcourt': [
+    'e-Bus Terminal, Port Harcourt',
+    'Rivers State',
+    'Nigeria'
+  ],
+  lagos: [
+    'e-Bus Terminal, Lagos',
+    'Lagos State',
+    'Nigeria'
+  ],
+  kano: [
+    'e-Bus Terminal, Kano',
+    'Kano State',
+    'Nigeria'
+  ]
+}
+
+function getCityAddressLines(cityName?: string): string[] {
+  if (!cityName) {
+    return ['Address unavailable']
+  }
+
+  const key = cityName.trim().toLowerCase()
+  return CITY_ADDRESS_LINES[key] || [
+    `e-Bus Terminal, ${cityName}`,
+    'Nigeria'
+  ]
+}
+
 export default function FindTicketPage() {
   const searchParams = useSearchParams()
   const [searchTerm, setSearchTerm] = useState('')
@@ -215,16 +255,8 @@ export default function FindTicketPage() {
     doc.text(bookingData.tripFrom || '-', mm(20), headerY + mm(30))
     doc.text(bookingData.tripTo || '-', mm(120), headerY + mm(30))
 
-    const departureLines = [
-      'TMT Plaza, Wurukum, Makurdi',
-      '(Before Salvation Ministries',
-      'Church, formerly AfriBank)'
-    ]
-    const destinationLines = [
-      '107B Nnamdi Azikiwe Express',
-      'Way, Area 3 Junction,',
-      'Garki, FCT-Abuja'
-    ]
+    const departureLines = getCityAddressLines(bookingData.tripFrom)
+    const destinationLines = getCityAddressLines(bookingData.tripTo)
     let locY = headerY + mm(36)
     departureLines.forEach(line => {
       doc.text(line, mm(20), locY)
