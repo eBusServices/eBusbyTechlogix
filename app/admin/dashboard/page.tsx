@@ -187,9 +187,16 @@ export default function AdminDashboardPage() {
         setTrips(prev => prev.map(trip => 
           trip.id === tripId ? updatedTrip : trip
         ))
+        setShowTripModal(false)
+        setEditingTrip(null)
+        fetchDashboardData()
+      } else {
+        const errorData = await response.json().catch(() => ({}))
+        alert(errorData.error || 'Failed to update trip')
       }
     } catch (error) {
       console.error('Error updating trip:', error)
+      alert('Failed to update trip')
     }
   }
 
@@ -604,8 +611,8 @@ export default function AdminDashboardPage() {
               handleUpdateTrip(editingTrip.id, tripData)
             } else {
               handleCreateTrip(tripData)
+              setEditingTrip(null)
             }
-            setEditingTrip(null)
           }}
         />
       )}

@@ -78,7 +78,24 @@ export async function PATCH(
     await ensureDbInitialized()
 
     const body = await request.json()
-    const updated = await updateTrip(params.id, body)
+    const normalizedUpdates: Partial<Trip> = {
+      ...body,
+      from_location: body.from_location ?? body.from,
+      to_location: body.to_location ?? body.to,
+      departure_time: body.departure_time ?? body.departureTime,
+      arrival_time: body.arrival_time ?? body.arrivalTime,
+      trip_date: body.trip_date ?? body.date,
+      total_seats:
+        body.total_seats ??
+        (body.totalSeats !== undefined ? Number(body.totalSeats) : undefined),
+      available_seats:
+        body.available_seats ??
+        (body.availableSeats !== undefined ? Number(body.availableSeats) : undefined),
+      driver_id: body.driver_id ?? body.driverId,
+      price: body.price !== undefined ? Number(body.price) : undefined,
+    }
+
+    const updated = await updateTrip(params.id, normalizedUpdates)
 
     return NextResponse.json(mapTripForClient(updated))
   } catch (error) {
