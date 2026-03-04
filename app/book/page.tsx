@@ -233,6 +233,48 @@ export default function BookPage() {
     )
   }
 
+  const seatByNumber = new Map(
+    (trip.seatingLayout || []).map((seat) => [seat.seatNumber, seat])
+  )
+
+  let topSeat: number | undefined
+  let layoutRows: number[][] = []
+
+  if (trip.totalSeats === 7) {
+    topSeat = 1
+    layoutRows = [[2, 3, 4], [5, 6, 7]]
+  } else if (trip.totalSeats === 6) {
+    topSeat = 1
+    layoutRows = [[2, 3], [4, 5, 6]]
+  } else {
+    const allSeats = (trip.seatingLayout || []).map((seat) => seat.seatNumber)
+    for (let index = 0; index < allSeats.length; index += 4) {
+      layoutRows.push(allSeats.slice(index, index + 4))
+    }
+  }
+
+  const renderSeat = (seatNumber: number) => {
+    const seat = seatByNumber.get(seatNumber)
+    const isOccupied = seat?.isOccupied ?? false
+
+    return (
+      <button
+        key={seatNumber}
+        onClick={() => handleSeatClick(seatNumber, isOccupied)}
+        disabled={isOccupied}
+        className={`w-12 h-12 rounded text-sm font-semibold transition-all ${
+          isOccupied
+            ? 'bg-red-200 text-red-800 cursor-not-allowed'
+            : selectedSeats.includes(seatNumber)
+            ? 'bg-primary-600 text-white'
+            : 'bg-green-200 text-green-800 hover:bg-green-300'
+        }`}
+      >
+        {seatNumber}
+      </button>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -297,44 +339,52 @@ export default function BookPage() {
 
               {/* Seat Map */}
               <div className="bg-gray-100 rounded-lg p-6">
-                <div className="text-center mb-4">
-                  <div className="inline-block bg-gray-800 text-white px-4 py-2 rounded">
-                    Driver
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-4 gap-2 max-w-md mx-auto">
-                  {trip.seatingLayout?.map((seat) => (
-                    <button
-                      key={seat.seatNumber}
-                      onClick={() => handleSeatClick(seat.seatNumber, seat.isOccupied)}
-                      disabled={seat.isOccupied}
-                      className={`w-12 h-12 rounded text-sm font-semibold transition-all ${
-                        seat.isOccupied
-                          ? 'bg-red-200 text-red-800 cursor-not-allowed'
-                          : selectedSeats.includes(seat.seatNumber)
-                          ? 'bg-primary-600 text-white'
-                          : 'bg-green-200 text-green-800 hover:bg-green-300'
-                      }`}
-                    >
-                      {seat.seatNumber}
-                    </button>
-                  ))}
-                </div>
+                {topSeat !== undefined ? (
+                  <div className="max-w-md mx-auto space-y-3">
+                    <div className="flex items-center justify-center gap-8">
+                      <div className="inline-block bg-gray-800 text-white px-4 py-2 rounded">
+                        Driver
+                      </div>
+                      {renderSeat(topSeat)}
+                    </div>
 
-                <div className="flex justify-center mt-6 space-x-6 text-sm">
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 bg-green-200 rounded mr-2"></div>
-                    <span>Available</span>
+                    {layoutRows.map((row, rowIndex) => (
+                      <div key={rowIndex} className="flex items-center justify-center gap-6">
+                        {row.map((seatNumber) => renderSeat(seatNumber))}
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 bg-primary-600 rounded mr-2"></div>
-                    <span>Selected</span>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="text-center">
+                      <div className="inline-block bg-gray-800 text-white px-4 py-2 rounded">
+                        Driver
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      {layoutRows.map((row, rowIndex) => (
+                        <div key={rowIndex} className="flex items-center justify-center gap-2">
+                          {row.map((seatNumber) => renderSeat(seatNumber))}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 bg-red-200 rounded mr-2"></div>
-                    <span>Occupied</span>
-                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-center mt-6 space-x-6 text-sm">
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-green-200 rounded mr-2"></div>
+                  <span>Available</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-primary-600 rounded mr-2"></div>
+                  <span>Selected</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-red-200 rounded mr-2"></div>
+                  <span>Occupied</span>
                 </div>
               </div>
 
