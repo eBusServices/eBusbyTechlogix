@@ -89,7 +89,7 @@ export default function Gallery() {
                 The booking process is so easy and the staff is very professional."
               </blockquote>
               <cite className="text-gray-600 font-medium">
-                - Sarah Johnson, Regular Passenger
+                - Sharon Johnson, Regular Passenger
               </cite>
             </div>
           </div>
