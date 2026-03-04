@@ -225,6 +225,20 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const getSeatStats = (trip: Trip) => {
+    const total = Math.max(0, Number(trip.totalSeats) || 0)
+    const availableRaw = Number(trip.availableSeats)
+    const available = Number.isFinite(availableRaw)
+      ? Math.min(Math.max(0, availableRaw), total)
+      : total
+
+    return {
+      total,
+      available,
+      booked: Math.max(0, total - available),
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -402,7 +416,7 @@ export default function AdminDashboardPage() {
                         <p className="text-sm text-gray-600">{trip.departureTime} - {trip.arrivalTime}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600">{trip.totalSeats - trip.availableSeats}/{trip.totalSeats}</p>
+                        <p className="text-sm text-gray-600">{getSeatStats(trip).booked}/{getSeatStats(trip).total}</p>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(trip.status)}`}>
                           {trip.status}
                         </span>
@@ -471,8 +485,8 @@ export default function AdminDashboardPage() {
                           ₦{trip.price.toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{trip.totalSeats - trip.availableSeats}/{trip.totalSeats}</div>
-                          <div className="text-sm text-gray-500">{trip.availableSeats} available</div>
+                          <div className="text-sm text-gray-900">{getSeatStats(trip).booked}/{getSeatStats(trip).total}</div>
+                          <div className="text-sm text-gray-500">{getSeatStats(trip).available} available</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(trip.status)}`}>

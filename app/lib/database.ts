@@ -290,10 +290,21 @@ export async function getTripById(tripId: string): Promise<Trip | null> {
 
 export async function createTrip(tripData: Omit<Trip, 'id' | 'created_at'>): Promise<Trip> {
   await initializeDatabase()
+  const totalSeatsRaw = Number(tripData.total_seats)
+  const totalSeats = Number.isFinite(totalSeatsRaw) && totalSeatsRaw > 0
+    ? Math.floor(totalSeatsRaw)
+    : 1
+  const availableSeatsRaw = Number(tripData.available_seats)
+  const availableSeats = Number.isFinite(availableSeatsRaw)
+    ? Math.min(Math.max(Math.floor(availableSeatsRaw), 0), totalSeats)
+    : totalSeats
+
   const trip: Trip = {
     id: randomUUID(),
     created_at: new Date().toISOString(),
     ...tripData,
+    total_seats: totalSeats,
+    available_seats: availableSeats,
   }
   trips.push(trip)
   return trip
@@ -305,7 +316,32 @@ export async function updateTrip(tripId: string, updates: Partial<Trip>): Promis
   if (index === -1) {
     throw new Error('Trip not found')
   }
-  trips[index] = { ...trips[index], ...updates }
+  const existingTrip = trips[index]
+
+  const requestedTotalSeatsRaw =
+    updates.total_seats !== undefined ? Number(updates.total_seats) : existingTrip.total_seats
+  const nextTotalSeats =
+    Number.isFinite(requestedTotalSeatsRaw) && requestedTotalSeatsRaw > 0
+      ? Math.floor(requestedTotalSeatsRaw)
+      : existingTrip.total_seats
+
+  const requestedAvailableSeatsRaw =
+    updates.available_seats !== undefined
+      ? Number(updates.available_seats)
+      : updates.total_seats !== undefined
+        ? Math.min(existingTrip.available_seats, nextTotalSeats)
+        : existingTrip.available_seats
+
+  const nextAvailableSeats = Number.isFinite(requestedAvailableSeatsRaw)
+    ? Math.min(Math.max(Math.floor(requestedAvailableSeatsRaw), 0), nextTotalSeats)
+    : Math.min(existingTrip.available_seats, nextTotalSeats)
+
+  trips[index] = {
+    ...existingTrip,
+    ...updates,
+    total_seats: nextTotalSeats,
+    available_seats: nextAvailableSeats,
+  }
   return trips[index]
 }
 

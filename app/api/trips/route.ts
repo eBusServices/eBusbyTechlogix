@@ -44,6 +44,12 @@ function buildFallbackTrips() {
 }
 
 function mapTripForClient(trip: any) {
+  const totalSeats = Math.max(0, Number(trip.total_seats) || 0)
+  const availableSeatsRaw = Number(trip.available_seats)
+  const availableSeats = Number.isFinite(availableSeatsRaw)
+    ? Math.min(Math.max(0, availableSeatsRaw), totalSeats)
+    : totalSeats
+
   return {
     id: trip.id,
     route: trip.route,
@@ -52,8 +58,8 @@ function mapTripForClient(trip: any) {
     departureTime: trip.departure_time,
     arrivalTime: trip.arrival_time,
     price: trip.price,
-    totalSeats: trip.total_seats,
-    availableSeats: trip.available_seats,
+    totalSeats,
+    availableSeats,
     date: trip.trip_date,
     vehicle: trip.vehicle,
     status: trip.status,
@@ -61,8 +67,8 @@ function mapTripForClient(trip: any) {
     to_location: trip.to_location,
     departure_time: trip.departure_time,
     arrival_time: trip.arrival_time,
-    total_seats: trip.total_seats,
-    available_seats: trip.available_seats,
+    total_seats: totalSeats,
+    available_seats: availableSeats,
     trip_date: trip.trip_date,
     created_at: trip.created_at,
   }

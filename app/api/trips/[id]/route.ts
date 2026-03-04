@@ -27,6 +27,12 @@ function mapTripForClient(trip: Trip | null) {
     return null
   }
 
+  const totalSeats = Math.max(0, Number(trip.total_seats) || 0)
+  const availableSeatsRaw = Number(trip.available_seats)
+  const availableSeats = Number.isFinite(availableSeatsRaw)
+    ? Math.min(Math.max(0, availableSeatsRaw), totalSeats)
+    : totalSeats
+
   return {
     id: trip.id,
     route: trip.route,
@@ -35,12 +41,12 @@ function mapTripForClient(trip: Trip | null) {
     departureTime: trip.departure_time,
     arrivalTime: trip.arrival_time,
     price: trip.price,
-    availableSeats: trip.available_seats,
-    totalSeats: trip.total_seats,
+    availableSeats,
+    totalSeats,
     date: trip.trip_date,
     vehicle: trip.vehicle,
     status: trip.status,
-    seatingLayout: buildSeatingLayout(trip.total_seats, trip.available_seats),
+    seatingLayout: buildSeatingLayout(totalSeats, availableSeats),
   }
 }
 
