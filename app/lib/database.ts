@@ -147,7 +147,7 @@ export async function initializeDatabase() {
 
   trips = [
     {
-      id: randomUUID(),
+      id: 'TRP001',
       route: 'Lagos to Abuja',
       from_location: 'Lagos',
       to_location: 'Abuja',
@@ -162,7 +162,7 @@ export async function initializeDatabase() {
       created_at: new Date().toISOString(),
     },
     {
-      id: randomUUID(),
+      id: 'TRP002',
       route: 'Abuja to Port Harcourt',
       from_location: 'Abuja',
       to_location: 'Port Harcourt',
@@ -177,7 +177,7 @@ export async function initializeDatabase() {
       created_at: new Date().toISOString(),
     },
     {
-      id: randomUUID(),
+      id: 'TRP003',
       route: 'Lagos to Kano',
       from_location: 'Lagos',
       to_location: 'Kano',
@@ -192,7 +192,7 @@ export async function initializeDatabase() {
       created_at: new Date().toISOString(),
     },
     {
-      id: randomUUID(),
+      id: 'TRP004',
       route: 'Port Harcourt to Lagos',
       from_location: 'Port Harcourt',
       to_location: 'Lagos',
