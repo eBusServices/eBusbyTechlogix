@@ -35,6 +35,33 @@ interface BookingDetails {
   bookingDate: string
 }
 
+function normalizeBookingDetails(raw: any): BookingDetails {
+  const tripRoute = raw.tripRoute || raw.trip_route || raw.route || ''
+  const routeParts = typeof tripRoute === 'string' ? tripRoute.split(/\s+to\s+/i) : []
+  const tripFrom = raw.tripFrom || raw.trip_from || raw.from || routeParts[0] || ''
+  const tripTo = raw.tripTo || raw.trip_to || raw.to || routeParts[1] || ''
+
+  return {
+    id: raw.id || '',
+    bookingReference: raw.bookingReference || raw.booking_reference || '',
+    passengerName: raw.passengerName || raw.passenger_name || '',
+    phone: raw.phone || '',
+    email: raw.email || '',
+    tripId: raw.tripId || raw.trip_id || '',
+    tripRoute,
+    tripFrom,
+    tripTo,
+    tripDate: raw.tripDate || raw.trip_date || '',
+    departureTime: raw.departureTime || raw.departure_time || '',
+    arrivalTime: raw.arrivalTime || raw.arrival_time || '',
+    selectedSeats: raw.selectedSeats || raw.selected_seats || [],
+    totalAmount: Number(raw.totalAmount ?? raw.total_amount ?? 0),
+    status: raw.status || 'confirmed',
+    paymentStatus: raw.paymentStatus || raw.payment_status || 'pending',
+    bookingDate: raw.bookingDate || raw.booking_date || raw.created_at || '',
+  }
+}
+
 const CITY_ADDRESS_LINES: Record<string, string[]> = {
   makurdi: [
     'TMT Plaza, Wurukum, Makurdi',
@@ -100,10 +127,11 @@ export default function FindTicketPage() {
       const data = await response.json()
 
       if (response.ok && Array.isArray(data) && data.length > 0) {
-        setBooking(data[0])
+        const normalizedBooking = normalizeBookingDetails(data[0])
+        setBooking(normalizedBooking)
         if (window.location.hash === '#download') {
           setTimeout(() => {
-            void downloadTicket(data[0])
+            void downloadTicket(normalizedBooking)
           }, 100)
         }
       } else {
