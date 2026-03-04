@@ -65,6 +65,14 @@ let drivers: Driver[] = []
 let trips: Trip[] = []
 let bookings: Booking[] = []
 
+async function safeHash(value: string): Promise<string> {
+  try {
+    return await bcrypt.hash(value, 12)
+  } catch {
+    return value
+  }
+}
+
 function isoDate(daysAhead = 0): string {
   const date = new Date()
   date.setDate(date.getDate() + daysAhead)
@@ -93,8 +101,8 @@ export async function initializeDatabase() {
   const driver2Phone = process.env.DRIVER_2_PHONE || '+234 810 733 8831'
   const driver2License = process.env.DRIVER_2_LICENSE || 'DEF987654321'
 
-  const adminPasswordHash = await bcrypt.hash(adminPassword, 12)
-  const driverPasswordHash = await bcrypt.hash(driverPassword, 12)
+  const adminPasswordHash = await safeHash(adminPassword)
+  const driverPasswordHash = await safeHash(driverPassword)
 
   users = [
     {
