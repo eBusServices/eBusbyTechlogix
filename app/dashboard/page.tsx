@@ -229,9 +229,12 @@ export default function DashboardPage() {
                       >
                         View Details
                       </Link>
-                      <button className="btn-primary text-sm px-4 py-2">
+                      <Link
+                        href={`/find-ticket?ref=${encodeURIComponent(booking.bookingReference)}#download`}
+                        className="btn-primary text-sm px-4 py-2"
+                      >
                         Download Ticket
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>

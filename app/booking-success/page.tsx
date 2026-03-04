@@ -3,32 +3,10 @@
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircleIcon, DocumentArrowDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
-import jsPDF from 'jspdf'
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams()
   const bookingRef = searchParams.get('ref')
-
-  const handleDownloadTicket = () => {
-    const reference = bookingRef || 'TL000000'
-    const doc = new jsPDF()
-
-    doc.setFontSize(20)
-    doc.text('e-Bus by TechLogix', 20, 20)
-    doc.setFontSize(14)
-    doc.text('Trip Ticket', 20, 32)
-
-    doc.setFontSize(12)
-    doc.text(`Booking Reference: ${reference}`, 20, 50)
-    doc.text(`Issued: ${new Date().toLocaleString()}`, 20, 60)
-    doc.text('Status: Confirmed', 20, 70)
-
-    doc.setFontSize(11)
-    doc.text('Please present this ticket and a valid ID at departure terminal.', 20, 90)
-    doc.text('Arrive at least 30 minutes before departure.', 20, 98)
-
-    doc.save(`eBus-ticket-${reference}.pdf`)
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-16">
@@ -96,9 +74,12 @@ export default function BookingSuccessPage() {
             <Link href={`/find-ticket?ref=${encodeURIComponent(bookingRef || '')}`} className="btn-primary">
               View Booking Details
             </Link>
-            <button onClick={handleDownloadTicket} className="btn-secondary">
+            <Link
+              href={`/find-ticket?ref=${encodeURIComponent(bookingRef || '')}#download`}
+              className="btn-secondary"
+            >
               Download Ticket
-            </button>
+            </Link>
             <Link href="/trips" className="btn-secondary">
               Book Another Trip
             </Link>
