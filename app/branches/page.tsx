@@ -14,7 +14,7 @@ interface Branch {
   name: string
   address: string
   phones: string[]
-  email: string
+  emails: string[]
   coordinates: {
     lat: number
     lng: number
@@ -129,14 +129,22 @@ export default function BranchesPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center">
-                    <EnvelopeIcon className="w-5 h-5 text-gray-400 mr-3" />
-                    <a 
-                      href={`mailto:${branch.email}`}
-                      className="text-primary-600 hover:text-primary-700 font-medium"
-                    >
-                      {branch.email}
-                    </a>
+                  <div>
+                    <div className="flex items-center">
+                      <EnvelopeIcon className="w-5 h-5 text-gray-400 mr-3" />
+                      <span className="text-gray-700 font-medium">Emails</span>
+                    </div>
+                    <div className="ml-8 mt-1 space-y-1">
+                      {branch.emails.map((email, index) => (
+                        <a
+                          key={index}
+                          href={`mailto:${email}`}
+                          className="block text-primary-600 hover:text-primary-700 font-medium"
+                        >
+                          {email}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </div>
 

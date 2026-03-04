@@ -6,8 +6,8 @@ const branches = [
     id: '1',
     name: 'Makurdi Branch',
     address: 'TMT Plaza, Iyorchia Ayu Road, Makurdi, Benue State, Nigeria',
-    phones: ['+234 810 733 8827'],
-    email: 'makurdi@techlogix.com',
+    phones: ['+234 902 350 6944'],
+    emails: ['info@techlogix.ng', 'admin@techlogix.ng'],
     coordinates: {
       lat: 7.733490792282525,
       lng: 8.512205174126747
@@ -26,7 +26,7 @@ const branches = [
     name: 'Abuja Branch',
     address: 'Area 3, Trinity Garden, Nnamdi Azikiwe Expy, Junction, Abuja 900108, Federal Capital Territory',
     phones: ['+234 805 822 2919', '+234 810 733 8827'],
-    email: 'abuja@techlogix.com',
+    emails: ['info@techlogix.ng', 'admin@techlogix.ng'],
     coordinates: {
       lat: 9.058456990976454,
       lng: 7.447042374122098
