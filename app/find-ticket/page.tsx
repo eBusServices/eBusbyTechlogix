@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { 
   MagnifyingGlassIcon, 
   TicketIcon, 
@@ -33,35 +34,31 @@ interface BookingDetails {
 }
 
 export default function FindTicketPage() {
+  const searchParams = useSearchParams()
   const [searchTerm, setSearchTerm] = useState('')
   const [booking, setBooking] = useState<BookingDetails | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!searchTerm.trim()) return
+  useEffect(() => {
+    const ref = searchParams.get('ref')
+    if (ref) {
+      setSearchTerm(ref)
+      void fetchBookingByReference(ref)
+    }
+  }, [searchParams])
 
+  const fetchBookingByReference = async (reference: string) => {
     setLoading(true)
     setError('')
     setBooking(null)
 
     try {
-      const response = await fetch(`/api/bookings?bookingReference=${searchTerm}`)
+      const response = await fetch(`/api/bookings?bookingReference=${encodeURIComponent(reference)}`)
       const data = await response.json()
 
-      if (response.ok && data.length > 0) {
-        // Mock trip data - in a real app, this would be fetched from the trips API
-        const mockBooking = {
-          ...data[0],
-          tripRoute: 'Makurdi to Abuja',
-          tripFrom: 'Makurdi',
-          tripTo: 'Abuja',
-          tripDate: '2025-01-20',
-          departureTime: '06:00',
-          arrivalTime: '10:00'
-        }
-        setBooking(mockBooking)
+      if (response.ok && Array.isArray(data) && data.length > 0) {
+        setBooking(data[0])
       } else {
         setError('Booking not found. Please check your booking reference and try again.')
       }
@@ -71,6 +68,13 @@ export default function FindTicketPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!searchTerm.trim()) return
+
+    await fetchBookingByReference(searchTerm)
   }
 
   const getStatusColor = (status: string) => {

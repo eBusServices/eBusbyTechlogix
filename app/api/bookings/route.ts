@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
   getAllBookings,
+  getBookingByReference,
   createBooking,
   generateBookingReference,
   getTripById,
@@ -20,11 +21,56 @@ async function ensureDbInitialized() {
   }
 }
 
-export async function GET() {
+async function mapBookingForClient(booking: any) {
+  const trip = booking.trip_id ? await getTripById(booking.trip_id) : null
+
+  return {
+    id: booking.id,
+    bookingReference: booking.booking_reference,
+    passengerName: booking.passenger_name,
+    phone: booking.phone,
+    email: booking.email,
+    tripId: booking.trip_id,
+    tripRoute: trip?.route || '',
+    tripFrom: trip?.from_location || '',
+    tripTo: trip?.to_location || '',
+    tripDate: trip?.trip_date || '',
+    departureTime: trip?.departure_time || '',
+    arrivalTime: trip?.arrival_time || '',
+    selectedSeats: booking.selected_seats || [],
+    totalAmount: booking.total_amount,
+    status: booking.status,
+    paymentStatus: booking.payment_status,
+    bookingDate: booking.created_at,
+    booking_reference: booking.booking_reference,
+    passenger_name: booking.passenger_name,
+    trip_id: booking.trip_id,
+    selected_seats: booking.selected_seats || [],
+    total_amount: booking.total_amount,
+    payment_status: booking.payment_status,
+    created_at: booking.created_at,
+  }
+}
+
+export async function GET(request: NextRequest) {
   try {
     await ensureDbInitialized()
+    const { searchParams } = new URL(request.url)
+    const bookingReference = searchParams.get('bookingReference')
+
+    if (bookingReference) {
+      const booking = await getBookingByReference(bookingReference)
+      if (!booking) {
+        return NextResponse.json([])
+      }
+
+      const mappedBooking = await mapBookingForClient(booking)
+      return NextResponse.json([mappedBooking])
+    }
+
     const bookings = await getAllBookings()
-    return NextResponse.json(bookings)
+    const mappedBookings = await Promise.all(bookings.map(mapBookingForClient))
+    return NextResponse.json(mappedBookings)
   } catch (error) {
     console.error('Bookings GET error:', error)
     return NextResponse.json(
@@ -100,7 +146,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: 'Booking created successfully',
-      booking,
+      booking: await mapBookingForClient(booking),
       bookingReference
     })
 

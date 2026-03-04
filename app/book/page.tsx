@@ -179,8 +179,13 @@ export default function BookPage() {
       const result = await response.json()
       
       if (response.ok) {
-        // Redirect to success page with booking reference
-        router.push(`/booking-success?ref=${result.booking.bookingReference}`)
+        const bookingRef =
+          result.bookingReference ||
+          result.booking?.booking_reference ||
+          result.booking?.bookingReference ||
+          ''
+
+        router.push(`/booking-success?ref=${encodeURIComponent(bookingRef)}`)
       } else {
         alert(result.error || 'Booking failed')
       }

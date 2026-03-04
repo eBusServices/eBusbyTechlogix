@@ -13,7 +13,7 @@ interface Branch {
   id: string
   name: string
   address: string
-  phone: string
+  phones: string[]
   email: string
   coordinates: {
     lat: number
@@ -112,14 +112,22 @@ export default function BranchesPage() {
 
                 {/* Contact Info */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div className="flex items-center">
-                    <PhoneIcon className="w-5 h-5 text-gray-400 mr-3" />
-                    <a 
-                      href={`tel:${branch.phone}`}
-                      className="text-primary-600 hover:text-primary-700 font-medium"
-                    >
-                      {branch.phone}
-                    </a>
+                  <div>
+                    <div className="flex items-center">
+                      <PhoneIcon className="w-5 h-5 text-gray-400 mr-3" />
+                      <span className="text-gray-700 font-medium">Contacts</span>
+                    </div>
+                    <div className="ml-8 mt-1 space-y-1">
+                      {branch.phones.map((phone, index) => (
+                        <a
+                          key={index}
+                          href={`tel:${phone}`}
+                          className="block text-primary-600 hover:text-primary-700 font-medium"
+                        >
+                          {phone}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                   <div className="flex items-center">
                     <EnvelopeIcon className="w-5 h-5 text-gray-400 mr-3" />
@@ -191,7 +199,7 @@ export default function BranchesPage() {
                   Get Directions
                 </a>
                 <a
-                  href={`tel:${branch.phone}`}
+                  href={`tel:${branch.phones[0]}`}
                   className="flex-1 btn-secondary text-center"
                 >
                   Call Branch
