@@ -226,17 +226,28 @@ export async function createUser(userData: Omit<User, 'id' | 'created_at'>): Pro
 
 export async function findUserByEmail(email: string): Promise<User | null> {
   await initializeDatabase()
-  return users.find((user) => user.email === email) || null
+  const normalizedEmail = email.trim().toLowerCase()
+  return users.find((user) => user.email.trim().toLowerCase() === normalizedEmail) || null
 }
 
 export async function findUserByUsername(username: string): Promise<User | null> {
   await initializeDatabase()
-  return users.find((user) => user.username === username) || null
+  const normalizedUsername = username.trim().toLowerCase()
+  return (
+    users.find((user) => user.username?.trim().toLowerCase() === normalizedUsername) || null
+  )
 }
 
 export async function findUserByEmailOrUsername(identifier: string): Promise<User | null> {
   await initializeDatabase()
-  return users.find((user) => user.email === identifier || user.username === identifier) || null
+  const normalizedIdentifier = identifier.trim().toLowerCase()
+  return (
+    users.find((user) => {
+      const email = user.email.trim().toLowerCase()
+      const username = user.username?.trim().toLowerCase()
+      return email === normalizedIdentifier || username === normalizedIdentifier
+    }) || null
+  )
 }
 
 export async function updateUserLastLogin(userId: string): Promise<void> {
@@ -249,7 +260,8 @@ export async function updateUserLastLogin(userId: string): Promise<void> {
 // Driver database functions
 export async function findDriverById(driverId: string): Promise<Driver | null> {
   await initializeDatabase()
-  return drivers.find((driver) => driver.driver_id === driverId) || null
+  const normalizedDriverId = driverId.trim().toUpperCase()
+  return drivers.find((driver) => driver.driver_id.trim().toUpperCase() === normalizedDriverId) || null
 }
 
 export async function getAllDrivers(): Promise<Driver[]> {

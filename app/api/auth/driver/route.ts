@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
   try {
     await ensureDbInitialized()
     const body = await request.json()
-    const { driverId, password } = body
+    const driverId = String(body?.driverId || '').trim()
+    const password = String(body?.password || '')
 
     // Validate required fields
     if (!driverId || !password) {
@@ -54,7 +55,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, driver.password)
+    let isValidPassword = false
+    try {
+      isValidPassword = await bcrypt.compare(password, driver.password)
+    } catch {
+      isValidPassword = false
+    }
+
+    if (!isValidPassword) {
+      isValidPassword = password === driver.password
+    }
+
     if (!isValidPassword) {
       return NextResponse.json(
         { error: 'Invalid driver ID or password' },

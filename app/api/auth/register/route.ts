@@ -6,7 +6,12 @@ import { createUser, findUserByEmail, findUserByUsername } from '../../../lib/da
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, username, email, phone, password, confirmPassword } = body
+    const name = String(body?.name || '').trim()
+    const usernameInput = String(body?.username || '').trim()
+    const email = String(body?.email || '').trim().toLowerCase()
+    const phone = String(body?.phone || '').trim()
+    const password = String(body?.password || '')
+    const confirmPassword = String(body?.confirmPassword || '')
 
     // Validate required fields
     if (!name || !email || !phone || !password || !confirmPassword) {
@@ -60,8 +65,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if username already exists (if provided)
-    if (username) {
-      const existingUsername = await findUserByUsername(username)
+    if (usernameInput) {
+      const existingUsername = await findUserByUsername(usernameInput)
       if (existingUsername) {
         return NextResponse.json(
           { error: 'Username is already taken' },
@@ -76,7 +81,7 @@ export async function POST(request: NextRequest) {
     // Create user
     const user = await createUser({
       name,
-      username: username || undefined,
+      username: usernameInput || undefined,
       email,
       phone,
       password: hashedPassword,
