@@ -1,12 +1,57 @@
 'use client'
 
+import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircleIcon, DocumentArrowDownIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
+import {
+  downloadStructuredTicket,
+  normalizeTicketBooking,
+  printStructuredTicket,
+} from '../lib/ticketPdf'
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams()
   const bookingRef = searchParams.get('ref')
+  const [downloading, setDownloading] = useState(false)
+
+  const getBookingForReference = async () => {
+    const response = await fetch(`/api/bookings?bookingReference=${encodeURIComponent(bookingRef || '')}`)
+    const data = await response.json()
+
+    if (response.ok && Array.isArray(data) && data.length > 0) {
+      return normalizeTicketBooking(data[0])
+    }
+
+    return normalizeTicketBooking({
+      bookingReference: bookingRef || 'TL000000',
+      status: 'confirmed',
+      paymentStatus: 'pending',
+    })
+  }
+
+  const handleDownloadTicket = async () => {
+    try {
+      setDownloading(true)
+      const booking = await getBookingForReference()
+      await downloadStructuredTicket(booking)
+    } catch (error) {
+      console.error('Download ticket error:', error)
+      alert('Unable to download ticket right now. Please try again.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  const handlePrintTicket = async () => {
+    try {
+      const booking = await getBookingForReference()
+      await printStructuredTicket(booking)
+    } catch (error) {
+      console.error('Print ticket error:', error)
+      alert('Unable to print ticket right now. Please try again.')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-16">
@@ -74,12 +119,23 @@ export default function BookingSuccessPage() {
             <Link href={`/find-ticket?ref=${encodeURIComponent(bookingRef || '')}`} className="btn-primary">
               View Booking Details
             </Link>
-            <Link
-              href={`/find-ticket?ref=${encodeURIComponent(bookingRef || '')}#download`}
+            <button
+              onClick={() => {
+                void handleDownloadTicket()
+              }}
+              disabled={downloading}
+              className="btn-secondary disabled:opacity-50"
+            >
+              {downloading ? 'Preparing Ticket...' : 'Download Ticket'}
+            </button>
+            <button
+              onClick={() => {
+                void handlePrintTicket()
+              }}
               className="btn-secondary"
             >
-              Download Ticket
-            </Link>
+              Print Ticket
+            </button>
             <Link href="/trips" className="btn-secondary">
               Book Another Trip
             </Link>
