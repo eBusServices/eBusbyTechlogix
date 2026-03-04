@@ -43,6 +43,31 @@ function buildFallbackTrips() {
   ]
 }
 
+function mapTripForClient(trip: any) {
+  return {
+    id: trip.id,
+    route: trip.route,
+    from: trip.from_location,
+    to: trip.to_location,
+    departureTime: trip.departure_time,
+    arrivalTime: trip.arrival_time,
+    price: trip.price,
+    totalSeats: trip.total_seats,
+    availableSeats: trip.available_seats,
+    date: trip.trip_date,
+    vehicle: trip.vehicle,
+    status: trip.status,
+    from_location: trip.from_location,
+    to_location: trip.to_location,
+    departure_time: trip.departure_time,
+    arrival_time: trip.arrival_time,
+    total_seats: trip.total_seats,
+    available_seats: trip.available_seats,
+    trip_date: trip.trip_date,
+    created_at: trip.created_at,
+  }
+}
+
 // Initialize database on first API call
 let dbInitialized = false
 async function ensureDbInitialized() {
@@ -86,7 +111,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    return NextResponse.json(trips)
+    return NextResponse.json(trips.map(mapTripForClient))
   } catch (error) {
     console.error('Trips GET error:', error)
 
@@ -108,7 +133,7 @@ export async function GET(request: NextRequest) {
       fallbackTrips = fallbackTrips.filter(trip => trip.trip_date === date)
     }
 
-    return NextResponse.json(fallbackTrips)
+    return NextResponse.json(fallbackTrips.map(mapTripForClient))
   }
 }
 

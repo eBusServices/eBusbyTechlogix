@@ -68,6 +68,8 @@ export default function BookPage() {
   useEffect(() => {
     if (tripId) {
       fetchTrip()
+    } else {
+      setLoading(false)
     }
   }, [tripId])
 
@@ -184,17 +186,24 @@ export default function BookPage() {
   }
 
   if (!trip) {
+    const hasTripId = Boolean(tripId)
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <XCircleIcon className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Trip Not Found</h2>
-          <p className="text-gray-600 mb-6">The requested trip could not be found.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {hasTripId ? 'Trip Not Found' : 'Select a Trip First'}
+          </h2>
+          <p className="text-gray-600 mb-6">
+            {hasTripId
+              ? 'The requested trip could not be found.'
+              : 'Please choose a trip from the trips page before booking.'}
+          </p>
           <button
             onClick={() => router.push('/trips')}
             className="btn-primary"
           >
-            Browse Available Trips
+            Browse Trips
           </button>
         </div>
       </div>

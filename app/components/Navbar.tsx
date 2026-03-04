@@ -11,7 +11,7 @@ export default function Navbar() {
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Trips', href: '/trips' },
-    { name: 'Book Trip', href: '/book' },
+    { name: 'Book Trip', href: '/trips' },
     { name: 'Branches', href: '/branches' },
     { name: 'Find Ticket', href: '/find-ticket' },
   ]
