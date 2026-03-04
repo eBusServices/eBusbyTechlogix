@@ -48,7 +48,8 @@ export default function BookPage() {
   const tripId = searchParams.get('tripId')
   
   const [trip, setTrip] = useState<Trip | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(Boolean(tripId))
+  const [tripLoadError, setTripLoadError] = useState('')
   const [selectedSeats, setSelectedSeats] = useState<number[]>([])
   const [bookingData, setBookingData] = useState<BookingData>({
     tripId: tripId || '',
@@ -67,9 +68,10 @@ export default function BookPage() {
 
   useEffect(() => {
     if (tripId) {
-      fetchTrip()
+      fetchTrip(tripId)
     } else {
       setLoading(false)
+      setTripLoadError('')
     }
   }, [tripId])
 
@@ -82,16 +84,32 @@ export default function BookPage() {
     }
   }, [selectedSeats, trip])
 
-  const fetchTrip = async () => {
+  const fetchTrip = async (currentTripId: string) => {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 10000)
+
     try {
-      const response = await fetch(`/api/trips/${tripId}`)
+      setLoading(true)
+      setTripLoadError('')
+
+      const response = await fetch(`/api/trips/${currentTripId}`, {
+        signal: controller.signal,
+        cache: 'no-store'
+      })
+
       if (response.ok) {
         const data = await response.json()
-        setTrip(data)
+        setTrip(data || null)
+      } else {
+        setTrip(null)
+        setTripLoadError('The selected trip could not be loaded.')
       }
     } catch (error) {
       console.error('Error fetching trip:', error)
+      setTrip(null)
+      setTripLoadError('Unable to load trip details right now. Please try again.')
     } finally {
+      clearTimeout(timeout)
       setLoading(false)
     }
   }
@@ -196,7 +214,7 @@ export default function BookPage() {
           </h2>
           <p className="text-gray-600 mb-6">
             {hasTripId
-              ? 'The requested trip could not be found.'
+              ? (tripLoadError || 'The requested trip could not be found.')
               : 'Please choose a trip from the trips page before booking.'}
           </p>
           <button
