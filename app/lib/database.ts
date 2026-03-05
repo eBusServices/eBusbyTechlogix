@@ -59,11 +59,35 @@ export interface Booking {
   created_at: string
 }
 
+export interface Fleet {
+  id: string
+  name: string
+  vehicle_type: string
+  total_seats: number
+  registration_number: string
+  status: 'active' | 'inactive'
+  created_at: string
+}
+
+export interface Route {
+  id: string
+  name: string
+  from_location: string
+  to_location: string
+  price: number
+  distance?: string
+  estimated_duration?: string
+  status: 'active' | 'inactive'
+  created_at: string
+}
+
 let initialized = false
 let users: User[] = []
 let drivers: Driver[] = []
 let trips: Trip[] = []
 let bookings: Booking[] = []
+let fleets: Fleet[] = []
+let routes: Route[] = []
 
 async function safeHash(value: string): Promise<string> {
   try {
@@ -204,6 +228,94 @@ export async function initializeDatabase() {
       trip_date: isoDate(2),
       vehicle: 'Toyota Hiace - PH123JKL',
       status: 'scheduled',
+      created_at: new Date().toISOString(),
+    },
+  ]
+
+  fleets = [
+    {
+      id: randomUUID(),
+      name: 'Mercedes Sprinter - LS1',
+      vehicle_type: '7-Seater',
+      total_seats: 7,
+      registration_number: 'LG123ABC',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: randomUUID(),
+      name: 'Toyota Hiace - LS2',
+      vehicle_type: '7-Seater',
+      total_seats: 7,
+      registration_number: 'AB456DEF',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: randomUUID(),
+      name: 'Ford Transit - LS3',
+      vehicle_type: '6-Seater',
+      total_seats: 6,
+      registration_number: 'PH789GHI',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    },
+  ]
+
+  routes = [
+    {
+      id: randomUUID(),
+      name: 'Lagos to Abuja',
+      from_location: 'Lagos',
+      to_location: 'Abuja',
+      price: 15000,
+      distance: '520 km',
+      estimated_duration: '6 hours',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: randomUUID(),
+      name: 'Abuja to Port Harcourt',
+      from_location: 'Abuja',
+      to_location: 'Port Harcourt',
+      price: 18000,
+      distance: '480 km',
+      estimated_duration: '6 hours',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: randomUUID(),
+      name: 'Lagos to Kano',
+      from_location: 'Lagos',
+      to_location: 'Kano',
+      price: 20000,
+      distance: '800 km',
+      estimated_duration: '10 hours',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: randomUUID(),
+      name: 'Port Harcourt to Lagos',
+      from_location: 'Port Harcourt',
+      to_location: 'Lagos',
+      price: 16000,
+      distance: '450 km',
+      estimated_duration: '6 hours',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: randomUUID(),
+      name: 'Makurdi to Abuja',
+      from_location: 'Makurdi',
+      to_location: 'Abuja',
+      price: 12000,
+      distance: '280 km',
+      estimated_duration: '4 hours',
+      status: 'active',
       created_at: new Date().toISOString(),
     },
   ]
@@ -406,4 +518,68 @@ export function generateBookingReference(): string {
   const timestamp = Date.now().toString().slice(-6)
   const random = Math.random().toString(36).substr(2, 4).toUpperCase()
   return `${prefix}${timestamp}${random}`
+}
+
+// Fleet database functions
+export async function getAllFleets(): Promise<Fleet[]> {
+  await initializeDatabase()
+  return fleets.filter((fleet) => fleet.status === 'active')
+}
+
+export async function getFleetById(fleetId: string): Promise<Fleet | null> {
+  await initializeDatabase()
+  return fleets.find((fleet) => fleet.id === fleetId) || null
+}
+
+export async function createFleet(fleetData: Omit<Fleet, 'id' | 'created_at'>): Promise<Fleet> {
+  await initializeDatabase()
+  const fleet: Fleet = {
+    id: randomUUID(),
+    created_at: new Date().toISOString(),
+    ...fleetData,
+  }
+  fleets.push(fleet)
+  return fleet
+}
+
+export async function updateFleet(fleetId: string, updates: Partial<Fleet>): Promise<Fleet> {
+  await initializeDatabase()
+  const index = fleets.findIndex((fleet) => fleet.id === fleetId)
+  if (index === -1) {
+    throw new Error('Fleet not found')
+  }
+  fleets[index] = { ...fleets[index], ...updates }
+  return fleets[index]
+}
+
+// Route database functions
+export async function getAllRoutes(): Promise<Route[]> {
+  await initializeDatabase()
+  return routes.filter((route) => route.status === 'active')
+}
+
+export async function getRouteById(routeId: string): Promise<Route | null> {
+  await initializeDatabase()
+  return routes.find((route) => route.id === routeId) || null
+}
+
+export async function createRoute(routeData: Omit<Route, 'id' | 'created_at'>): Promise<Route> {
+  await initializeDatabase()
+  const route: Route = {
+    id: randomUUID(),
+    created_at: new Date().toISOString(),
+    ...routeData,
+  }
+  routes.push(route)
+  return route
+}
+
+export async function updateRoute(routeId: string, updates: Partial<Route>): Promise<Route> {
+  await initializeDatabase()
+  const index = routes.findIndex((route) => route.id === routeId)
+  if (index === -1) {
+    throw new Error('Route not found')
+  }
+  routes[index] = { ...routes[index], ...updates }
+  return routes[index]
 }
