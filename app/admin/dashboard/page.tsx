@@ -355,7 +355,7 @@ export default function AdminDashboardPage() {
                     <CurrencyDollarIcon className="w-6 h-6 text-purple-600" />
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-2xl font-bold text-gray-900">₦{stats.totalRevenue.toLocaleString()}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900">₦{(Number(stats.totalRevenue) || 0).toLocaleString()}</h3>
                     <p className="text-sm text-gray-600">Total Revenue</p>
                   </div>
                 </div>
@@ -409,7 +409,7 @@ export default function AdminDashboardPage() {
                         <p className="text-sm text-gray-600">{booking.bookingReference}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium text-primary-600">₦{booking.totalAmount.toLocaleString()}</p>
+                        <p className="font-medium text-primary-600">₦{(Number(booking?.totalAmount) || 0).toLocaleString()}</p>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
                           {booking.status}
                         </span>
@@ -495,7 +495,7 @@ export default function AdminDashboardPage() {
                           <div className="text-sm text-gray-500">{trip.departureTime} - {trip.arrivalTime}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          ₦{trip.price.toLocaleString()}
+                          ₦{(Number(trip?.price) || 0).toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">{getSeatStats(trip).booked}/{getSeatStats(trip).total}</div>
@@ -579,7 +579,7 @@ export default function AdminDashboardPage() {
                           <div className="text-sm text-gray-900">Trip ID: {booking.tripId}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          ₦{booking.totalAmount.toLocaleString()}
+                          ₦{(Number(booking?.totalAmount) || 0).toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(booking.status)}`}>
