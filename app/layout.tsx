@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from './components/Navbar'
@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   title: 'e-Bus Services by TechLogix Solutions Ltd.',
   description: 'Modern bus booking and transportation services across Nigeria',
   keywords: 'bus booking, transportation, Nigeria, Abuja, Makurdi, travel',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({

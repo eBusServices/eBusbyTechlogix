@@ -280,7 +280,7 @@ export default function BookPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Book Your Trip</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Book Your Trip</h1>
           <div className="bg-white rounded-lg shadow p-4">
             <h2 className="text-xl font-semibold text-primary-600 mb-2">
               {trip.from} → {trip.to}
@@ -294,11 +294,11 @@ export default function BookPage() {
         </div>
 
         {/* Progress Steps */}
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center space-x-4">
+        <div className="flex justify-center mb-8 overflow-x-auto">
+          <div className="flex items-center space-x-2 sm:space-x-4 px-1">
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold ${
                   currentStep >= step 
                     ? 'bg-primary-600 text-white' 
                     : 'bg-gray-200 text-gray-600'
@@ -306,7 +306,7 @@ export default function BookPage() {
                   {step}
                 </div>
                 {step < 3 && (
-                  <div className={`w-16 h-1 mx-2 ${
+                  <div className={`w-10 sm:w-16 h-1 mx-1 sm:mx-2 ${
                     currentStep > step ? 'bg-primary-600' : 'bg-gray-200'
                   }`}></div>
                 )}
@@ -320,7 +320,7 @@ export default function BookPage() {
           {/* Step 1: Seat Selection */}
           {currentStep === 1 && (
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Select Your Seats</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Select Your Seats</h3>
               
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -338,7 +338,7 @@ export default function BookPage() {
               </div>
 
               {/* Seat Map */}
-              <div className="bg-gray-100 rounded-lg p-6">
+              <div className="bg-gray-100 rounded-lg p-4 sm:p-6 overflow-x-auto">
                 {topSeat !== undefined ? (
                   <div className="max-w-md mx-auto space-y-3">
                     <div className="flex items-center justify-center gap-8">
@@ -373,7 +373,7 @@ export default function BookPage() {
                 )}
               </div>
 
-              <div className="flex justify-center mt-6 space-x-6 text-sm">
+              <div className="flex flex-wrap justify-center mt-6 gap-4 sm:gap-6 text-sm">
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-green-200 rounded mr-2"></div>
                   <span>Available</span>
@@ -402,7 +402,7 @@ export default function BookPage() {
           {/* Step 2: Passenger Details */}
           {currentStep === 2 && (
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Passenger Information</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Passenger Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -512,7 +512,7 @@ export default function BookPage() {
           {/* Step 3: Confirmation */}
           {currentStep === 3 && (
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Booking Confirmation</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Booking Confirmation</h3>
               
               <div className="bg-gray-50 rounded-lg p-6 mb-6">
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">Trip Details</h4>
@@ -548,10 +548,10 @@ export default function BookPage() {
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8">
+          <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-0 sm:justify-between mt-8">
             <button
               onClick={() => setCurrentStep(prev => Math.max(1, prev - 1))}
-              className={`btn-secondary ${currentStep === 1 ? 'invisible' : ''}`}
+              className={`btn-secondary w-full sm:w-auto ${currentStep === 1 ? 'invisible sm:invisible hidden sm:inline-flex' : ''}`}
             >
               Previous
             </button>
@@ -560,7 +560,7 @@ export default function BookPage() {
               <button
                 onClick={() => setCurrentStep(prev => prev + 1)}
                 disabled={!validateStep(currentStep)}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -568,7 +568,7 @@ export default function BookPage() {
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                className="btn-primary w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 {submitting ? (
                   <>

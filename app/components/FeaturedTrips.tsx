@@ -66,7 +66,7 @@ export default function FeaturedTrips() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Featured Trips
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             Popular routes with the best prices and comfortable seating. 
             Book now for your next journey.
           </p>
@@ -83,7 +83,7 @@ export default function FeaturedTrips() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {trips.slice(0, 6).map((trip) => (
-                <div key={trip.id} className="card group hover:scale-105 transition-all duration-300">
+                <div key={trip.id} className="card group transition-all duration-300 md:hover:scale-[1.02]">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">

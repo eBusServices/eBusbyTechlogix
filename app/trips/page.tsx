@@ -76,7 +76,7 @@ export default function TripsPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Available Trips
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             Find and book your perfect trip from our available routes
           </p>
         </div>
@@ -212,10 +212,10 @@ export default function TripsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {trips.map((trip) => (
-              <div key={trip.id} className="card group hover:scale-105 transition-all duration-300">
+              <div key={trip.id} className="card group transition-all duration-300 md:hover:scale-[1.02]">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                       {trip.from} → {trip.to}
                     </h3>
                     <div className="flex items-center text-gray-600 text-sm mb-2">

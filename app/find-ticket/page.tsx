@@ -102,7 +102,7 @@ export default function FindTicketPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Find Your Ticket
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             Enter your booking reference to view your ticket details and travel information
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function FindTicketPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Booking Reference
             </label>
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-0">
               <div className="relative flex-1">
                 <TicketIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -128,7 +128,7 @@ export default function FindTicketPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="ml-3 btn-primary flex items-center space-x-2 disabled:opacity-50"
+                className="sm:ml-3 btn-primary flex items-center justify-center space-x-2 disabled:opacity-50"
               >
                 {loading ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -156,7 +156,7 @@ export default function FindTicketPage() {
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             {/* Header */}
             <div className="bg-primary-600 text-white p-6">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Booking Details</h2>
                   <p className="text-primary-100">Reference: {booking.bookingReference}</p>
@@ -176,27 +176,27 @@ export default function FindTicketPage() {
                     Trip Information
                   </h3>
                   <div className="space-y-3">
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Route:</span>
                       <span className="font-medium">{booking.tripRoute}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Date:</span>
                       <span className="font-medium">{new Date(booking.tripDate).toLocaleDateString()}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Departure:</span>
                       <span className="font-medium">{booking.departureTime}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Arrival:</span>
                       <span className="font-medium">{booking.arrivalTime}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Seats:</span>
                       <span className="font-medium">{booking.selectedSeats.join(', ')}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Total Amount:</span>
                       <span className="font-medium text-primary-600">₦{booking.totalAmount.toLocaleString()}</span>
                     </div>
@@ -209,23 +209,23 @@ export default function FindTicketPage() {
                     Passenger Information
                   </h3>
                   <div className="space-y-3">
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Name:</span>
                       <span className="font-medium">{booking.passengerName}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Phone:</span>
                       <span className="font-medium">{booking.phone}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Email:</span>
                       <span className="font-medium">{booking.email}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Booking Date:</span>
                       <span className="font-medium">{new Date(booking.bookingDate).toLocaleDateString()}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                       <span className="text-gray-600">Payment Status:</span>
                       <span className={`font-medium px-2 py-1 rounded text-sm ${getStatusColor(booking.paymentStatus)}`}>
                         {booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}
