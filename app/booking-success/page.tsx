@@ -9,6 +9,7 @@ import {
   normalizeTicketBooking,
   printStructuredTicket,
 } from '../lib/ticketPdf'
+import ReviewForm from '../components/ReviewForm'
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams()
@@ -158,6 +159,11 @@ export default function BookingSuccessPage() {
               </a>
             </div>
           </div>
+        </div>
+
+        {/* Review Form Section */}
+        <div className="mt-12">
+          <ReviewForm bookingReference={bookingRef || 'TL000000'} />
         </div>
       </div>
     </div>

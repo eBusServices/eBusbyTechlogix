@@ -81,6 +81,14 @@ export interface Route {
   created_at: string
 }
 
+export interface Review {
+  id: string
+  booking_reference: string
+  rating: number
+  message: string
+  created_at: string
+}
+
 let initialized = false
 let users: User[] = []
 let drivers: Driver[] = []
@@ -88,6 +96,7 @@ let trips: Trip[] = []
 let bookings: Booking[] = []
 let fleets: Fleet[] = []
 let routes: Route[] = []
+let reviews: Review[] = []
 
 async function safeHash(value: string): Promise<string> {
   try {
@@ -582,4 +591,28 @@ export async function updateRoute(routeId: string, updates: Partial<Route>): Pro
   }
   routes[index] = { ...routes[index], ...updates }
   return routes[index]
+}
+
+// Review database functions
+export async function createReview(reviewData: Omit<Review, 'id' | 'created_at'>): Promise<Review> {
+  await initializeDatabase()
+  const review: Review = {
+    id: randomUUID(),
+    created_at: new Date().toISOString(),
+    ...reviewData,
+  }
+  reviews.push(review)
+  return review
+}
+
+export async function getAllReviews(): Promise<Review[]> {
+  await initializeDatabase()
+  return [...reviews].sort((a, b) => b.created_at.localeCompare(a.created_at))
+}
+
+export async function getReviewsByRating(minRating: number): Promise<Review[]> {
+  await initializeDatabase()
+  return reviews
+    .filter((review) => review.rating >= minRating)
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
 }
