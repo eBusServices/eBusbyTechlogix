@@ -92,7 +92,16 @@ export default function AdminDashboardPage() {
       return
     }
 
-    const user = JSON.parse(userData)
+    let user: any = null
+    try {
+      user = JSON.parse(userData)
+    } catch {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      router.push('/auth/login')
+      return
+    }
+
     if (user.role !== 'admin') {
       router.push('/dashboard')
       return
@@ -110,8 +119,11 @@ export default function AdminDashboardPage() {
         fetch('/api/bookings')
       ])
 
-      const tripsData = await tripsRes.json()
-      const bookingsData = await bookingsRes.json()
+      const tripsDataRaw = await tripsRes.json()
+      const bookingsDataRaw = await bookingsRes.json()
+
+      const tripsData = Array.isArray(tripsDataRaw) ? tripsDataRaw : []
+      const bookingsData = Array.isArray(bookingsDataRaw) ? bookingsDataRaw : []
 
       setTrips(tripsData)
       setBookings(bookingsData)
@@ -119,15 +131,16 @@ export default function AdminDashboardPage() {
       // Calculate stats
       const today = new Date().toISOString().split('T')[0]
       const todayBookings = bookingsData.filter((b: Booking) => 
-        b.bookingDate.split('T')[0] === today
+        String(b?.bookingDate || '').split('T')[0] === today
       ).length
 
       const totalRevenue = bookingsData.reduce((sum: number, b: Booking) => 
-        sum + b.totalAmount, 0
+        sum + (Number(b?.totalAmount) || 0), 0
       )
 
       const activeTrips = tripsData.filter((t: Trip) => 
-        t.status === 'scheduled' || t.status === 'in-progress'
+        String(t?.status || '').toLowerCase() === 'scheduled' ||
+        String(t?.status || '').toLowerCase() === 'in-progress'
       ).length
 
       setStats({
@@ -554,7 +567,9 @@ export default function AdminDashboardPage() {
                       <tr key={booking.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">{booking.bookingReference}</div>
-                          <div className="text-sm text-gray-500">Seats: {booking.selectedSeats.join(', ')}</div>
+                          <div className="text-sm text-gray-500">
+                            Seats: {(Array.isArray(booking.selectedSeats) ? booking.selectedSeats : []).join(', ')}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">{booking.passengerName}</div>
