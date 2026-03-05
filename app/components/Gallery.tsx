@@ -86,7 +86,7 @@ export default function Gallery() {
               </div>
               <blockquote className="text-xl text-gray-700 italic mb-6">
                 "Excellent service! The buses are comfortable, clean, and always on time. 
-                The booking process is so easy and the staff is very professional."
+                The booking process is so easy and the staff are very professional."
               </blockquote>
               <cite className="text-gray-600 font-medium">
                 - Sharon, Regular Passenger
