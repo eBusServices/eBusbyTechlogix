@@ -61,6 +61,15 @@ interface Route {
   status: string
 }
 
+interface ReviewType {
+  id: string
+  booking_reference: string
+  rating: number
+  message: string
+  approved: boolean
+  created_at: string
+}
+
 interface AdminStats {
   totalUsers: number
   totalTrips: number
@@ -88,6 +97,7 @@ export default function AdminDashboardPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [fleets, setFleets] = useState<Fleet[]>([])
   const [routes, setRoutes] = useState<Route[]>([])
+  const [reviews, setReviews] = useState<ReviewType[]>([])
 
   const [loading, setLoading] = useState(true)
   const [showTripModal, setShowTripModal] = useState(false)
@@ -166,22 +176,31 @@ export default function AdminDashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [tripsRes, bookingsRes, fleetsRes, routesRes] = await Promise.all([
+      const [tripsRes, bookingsRes, fleetsRes, routesRes, reviewsRes] = await Promise.all([
         fetch('/api/trips'),
         fetch('/api/bookings'),
         fetch('/api/fleets'),
         fetch('/api/routes'),
+        fetch('/api/reviews'),
       ])
 
       const tripsDataRaw = await tripsRes.json()
       const bookingsDataRaw = await bookingsRes.json()
       const fleetsDataRaw = await fleetsRes.json()
       const routesDataRaw = await routesRes.json()
+      const reviewsDataRaw = await reviewsRes.json()
 
       const tripsData = Array.isArray(tripsDataRaw) ? tripsDataRaw : []
       const bookingsData = Array.isArray(bookingsDataRaw) ? bookingsDataRaw : []
       const fleetsData = Array.isArray(fleetsDataRaw) ? fleetsDataRaw : []
       const routesData = Array.isArray(routesDataRaw) ? routesDataRaw : []
+      const reviewsData = Array.isArray(reviewsDataRaw) ? reviewsDataRaw : []
+
+      setTrips(tripsData)
+      setBookings(bookingsData)
+      setFleets(fleetsData)
+      setRoutes(routesData)
+      setReviews(reviewsData)
 
       setTrips(tripsData)
       setBookings(bookingsData)
@@ -447,7 +466,30 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const handleApproveReview = async (reviewId: string, approve: boolean) => {
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ approved: approve }),
+      })
+
+      if (!response.ok) {
+        showToast('Failed to update review', 'error')
+        return
+      }
+
+      const updated = await response.json()
+      setReviews((prev) => prev.map((r) => (r.id === reviewId ? updated : r)))
+      showToast(`Review ${approve ? 'approved' : 'rejected'} successfully`)
+    } catch (error) {
+      console.error('Error updating review:', error)
+      showToast('Failed to update review', 'error')
+    }
+  }
+
   const handleLogout = () => {
+
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     router.push('/')
@@ -534,6 +576,7 @@ export default function AdminDashboardPage() {
               { id: 'fleets', name: 'Fleet Management', icon: TruckIcon },
               { id: 'routes', name: 'Route Management', icon: TruckIcon },
               { id: 'bookings', name: 'Bookings', icon: TicketIcon },
+              { id: 'reviews', name: 'Reviews', icon: EyeIcon },
               { id: 'users', name: 'Users', icon: UsersIcon },
             ].map((tab) => (
               <button
@@ -1034,6 +1077,90 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(booking.bookingDate).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'reviews' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">Review Management</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-white rounded-lg shadow p-4">
+                <div className="text-2xl font-bold text-gray-900">{reviews.length}</div>
+                <div className="text-sm text-gray-600">Total Reviews</div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-4">
+                <div className="text-2xl font-bold text-green-600">{reviews.filter(r => r.approved).length}</div>
+                <div className="text-sm text-gray-600">Approved</div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-4">
+                <div className="text-2xl font-bold text-yellow-600">{reviews.filter(r => !r.approved).length}</div>
+                <div className="text-sm text-gray-600">Pending Approval</div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Booking Ref</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {reviews.map((review) => (
+                      <tr key={review.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">{review.booking_reference}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-bold text-yellow-600">⭐ {review.rating}/5</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900 max-w-xs truncate">{review.message}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              review.approved
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                          >
+                            {review.approved ? 'Approved' : 'Pending'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(review.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                          {!review.approved && (
+                            <button
+                              onClick={() => handleApproveReview(review.id, true)}
+                              className="text-green-600 hover:text-green-900 font-medium"
+                            >
+                              Approve
+                            </button>
+                          )}
+                          {review.approved && (
+                            <button
+                              onClick={() => handleApproveReview(review.id, false)}
+                              className="text-red-600 hover:text-red-900 font-medium"
+                            >
+                              Reject
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}

@@ -86,6 +86,7 @@ export interface Review {
   booking_reference: string
   rating: number
   message: string
+  approved: boolean
   created_at: string
 }
 
@@ -594,11 +595,12 @@ export async function updateRoute(routeId: string, updates: Partial<Route>): Pro
 }
 
 // Review database functions
-export async function createReview(reviewData: Omit<Review, 'id' | 'created_at'>): Promise<Review> {
+export async function createReview(reviewData: Omit<Review, 'id' | 'created_at' | 'approved'>): Promise<Review> {
   await initializeDatabase()
   const review: Review = {
     id: randomUUID(),
     created_at: new Date().toISOString(),
+    approved: false,
     ...reviewData,
   }
   reviews.push(review)
@@ -613,6 +615,23 @@ export async function getAllReviews(): Promise<Review[]> {
 export async function getReviewsByRating(minRating: number): Promise<Review[]> {
   await initializeDatabase()
   return reviews
-    .filter((review) => review.rating >= minRating)
+    .filter((review) => review.rating >= minRating && review.approved)
     .sort((a, b) => b.created_at.localeCompare(a.created_at))
+}
+
+export async function getApprovedReviews(): Promise<Review[]> {
+  await initializeDatabase()
+  return reviews
+    .filter((review) => review.approved)
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+}
+
+export async function updateReviewApproval(reviewId: string, approved: boolean): Promise<Review> {
+  await initializeDatabase()
+  const index = reviews.findIndex((r) => r.id === reviewId)
+  if (index === -1) {
+    throw new Error('Review not found')
+  }
+  reviews[index].approved = approved
+  return reviews[index]
 }
